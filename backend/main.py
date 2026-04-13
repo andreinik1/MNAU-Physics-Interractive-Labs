@@ -223,13 +223,10 @@ def check_data(data: ExperimentData3):
         E_avg += E_calc
         E_msv.append(E_calc)
         detailed_results.append(TGK_check)
-        print(f"f_avg: {f_avg_calc}; E: {E_calc}")
     E_avg /= len(E_msv)
     for i in E_msv:
         delta_E_msv.append(abs(E_avg-i))
-    print("delta_E", delta_E_msv)
     delta_E_avg = sum(delta_E_msv)/len(delta_E_msv)
-    print(f"delta_E_avg: {delta_E_avg}; E_avg: {E_avg}")
     k = 0
     for m in data.measures:
         davgd_check = {
@@ -256,6 +253,53 @@ def check_data(data: ExperimentData3):
         "detailed_results": detailed_results
     }
 
+class Measures4(BaseModel):
+    gamma: str
+    P1: str
+    P2: str
+    P3: str
+    rho: str
+    V: str
+
+class ExperimentData4(BaseModel):
+    experiment: str
+    measures: List[Measures4]
+
+@app.post("/density-check")
+def check_data(data: ExperimentData4):
+    detailed_results = []
+    for m in data.measures:
+        TGK_check = {
+                "V": True, "gamma": True, "rho": True
+                }
+        V_user = float(m.V)
+        gamma_user = float(m.gamma)
+        rho = float(m.rho)
+
+        P3 = float(m.P3)
+        P2 = float(m.P2)
+        P1 = float(m.P1)
+
+        gammaw = 9807
+
+        V_calc = (P3-P2)/(gammaw)
+        if not math.isclose(V_user, V_calc, rel_tol=0.005):
+            TGK_check["V"] = False
+
+        gamma_calc = ((P1-P2)/(P3-P2))*gammaw
+        if not math.isclose(V_user, V_calc, rel_tol=0.005):
+            TGK_check["gamma"] = False
+
+        rho_calc = gamma_calc/9.81
+        if not math.isclose(V_user, V_calc, rel_tol=0.005):
+            TGK_check["rho"] = False
+
+        detailed_results.append(TGK_check)
+    return {
+        "status": "OK",
+        "detailed_results": detailed_results
+    }
+    
 if __name__ == "__main__":
     import uvicorn
     # Запускаем на порту 8080, т.к. 8000 занят твоим фронтом

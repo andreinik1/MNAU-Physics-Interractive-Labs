@@ -5,7 +5,7 @@ const Menu: React.FC = () => {
   return (
     <div>
       <h2>Каталог лабораторих робіт</h2>
-
+      <p style={{margin:"0 auto", fontSize:"20px", width: "max-content"}}>Модуль 1, 2 "Механіка"</p>
       <table style={{ margin: "0 auto" }}>
         <tbody>
           <tr>
