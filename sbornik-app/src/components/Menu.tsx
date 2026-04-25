@@ -1,29 +1,32 @@
+import React from "react";
 import { Link } from "react-router-dom";
-import "./Menu.scss"
+import "./Menu.scss";
 
 const Menu: React.FC = () => {
   return (
-    <div>
-      <h2>Каталог лабораторих робіт</h2>
-      <p style={{margin:"0 auto", fontSize:"20px", width: "max-content"}}>Модуль 1, 2 "Механіка"</p>
-      <table style={{ margin: "0 auto" }}>
-        <tbody>
-          <tr>
-            <td>
-              <Link to="/pendulum" className="linkStyles">Лабараторна Математичний маятник</Link>
-            </td>
-            <td>
-              <Link to="/young1" className="linkStyles">Лабораторнa Юнга 1</Link>
-            </td>
-            <td>
-              <Link to="/young2" className="linkStyles">Лабораторня Юнга 2</Link>
-            </td>
-            <td>
-              <Link to="/pitomaVaga" className="linkStyles">Визначення питомої ваги та густини тіла</Link>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div className="menu-container">
+      <h1>Інтерактивні лабораторні з фізики МНАУ</h1>
+      <h2>Каталог лабораторних робіт</h2>
+
+      <div className="module-section">
+        <p className="module-title">Модуль 1, 2 "Механіка"</p>
+        <div className="links-grid">
+          <Link to="/pendulum" className="linkStyles">Математичний маятник</Link>
+          <Link to="/young1" className="linkStyles">Модуль Юнга при згині балки</Link>
+          <Link to="/young2" className="linkStyles">Модуль Юнга при розтягуванні дроту</Link>
+          <Link to="/pitomaVaga" className="linkStyles">Визначення питомої ваги та густини тіла</Link>
+        </div>
+      </div>
+
+      <div className="module-section">
+        <p className="module-title">Модуль 3 "Молекулярна фізика"</p>
+        <div className="links-grid">
+          <Link to="/stocks" className="linkStyles">Визначення коефіцієнта в`язкості рідини методом Стокса</Link>
+          <Link to="/poverx" className="linkStyles">Визначення коефіцієнта поверхневого натягу методом відриву краплі</Link>
+          <Link to="/volog" className="linkStyles">Визначення вологості атмосферного повітря</Link>
+          <Link to="/adiab" className="linkStyles">Визначення відношення молярних теплоємностей повітря методом адіабатичного розширення</Link>
+        </div>
+      </div>
     </div>
   );
 };
