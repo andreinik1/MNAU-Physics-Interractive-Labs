@@ -2,41 +2,28 @@ import React from "react";
 import styles from "./LabContainer.module.scss";
 
 interface Props {
-  h1: number; setH1: (v: number) => void;
-  h2: number; setH2: (v: number) => void;
+  isCompressorOn: boolean; isSiphonPressed: boolean; isTubeConnected: boolean;
+  status: string; onCompressor: () => void; onSiphon: (s: boolean) => void;
+  onTube: () => void; onReset: () => void;
 }
 
-const AdiabControls: React.FC<Props> = ({ h1, setH1, h2, setH2 }) => {
-  const handleH1Change = (val: number) => {
-    setH1(val);
-    if (h2 > val) setH2(val); // h2 завжди <= h1
-  };
-
-  return (
-    <section className={styles.inputCard} style={{ minHeight: "100px", marginBottom: "30px" }}>
-      <h2>Керування манометром</h2>
-      <div className={styles.formInline}>
-        <div style={{ flex: 1, padding: "10px" }}>
-          <label>Різниця h₁ (нагнітання): <b>{h1}</b> мм</label>
-          <input
-            type="range" min="0" max="250"
-            value={h1}
-            onChange={(e) => handleH1Change(+e.target.value)}
-            style={{ width: "100%" }}
-          />
-        </div>
-        <div style={{ flex: 1, padding: "10px" }}>
-          <label>Різниця h₂ (після розширення): <b>{h2}</b> мм</label>
-          <input
-            type="range" min="0" max={h1}
-            value={h2}
-            onChange={(e) => setH2(+e.target.value)}
-            style={{ width: "100%" }}
-          />
-        </div>
-      </div>
-    </section>
-  );
-};
+const AdiabControls: React.FC<Props> = (p) => (
+  <section className={styles.inputCard} style={{marginBottom: "30px"}}>
+    <h2>Керування</h2>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+      <button className={styles.downloadBtn} onClick={p.onCompressor} style={{ background: p.isCompressorOn ? "#ef4444" : "#2563eb", margin: 0 }}>
+        {p.isCompressorOn ? "Вимкнути компресор" : "1. Включити компресор"}
+      </button>
+      <button className={styles.downloadBtn} onMouseDown={() => p.onSiphon(true)} onMouseUp={() => p.onSiphon(false)} style={{ margin: 0 }}>
+        {p.isSiphonPressed ? "Відкрито" : "2. Натиснути сифон"}
+      </button>
+      <button className={styles.downloadBtn} onClick={p.onTube} style={{ background: p.isTubeConnected ? "#64748b" : "#10b981", margin: 0 }}>
+        {p.isTubeConnected ? "3. Від'єднати трубку" : "Приєднати трубку"}
+      </button>
+      <button className={styles.downloadBtn} onClick={p.onReset} style={{ background: "#94a3b8", margin: 0 }}>Скинути</button>
+    </div>
+    <div style={{ marginTop: "10px", fontSize: "14px" }}><b>Статус:</b> {p.status}</div>
+  </section>
+);
 
 export default AdiabControls;
