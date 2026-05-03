@@ -9,7 +9,7 @@ import StocksPage from "./pages/StocksPage";
 import PoverxPage from "./pages/PoverxPage";
 import VologPage from "./pages/VologPage";
 import AdiabPage from "./pages/AdiabPage";
-
+import OberbekPage from "./pages/OberbekPage";
 
 
 const App: React.FC = () => {
@@ -24,6 +24,7 @@ const App: React.FC = () => {
       <Route path="/poverx" element={<PoverxPage />} />
       <Route path="/volog" element={<VologPage />} />
       <Route path="/adiab" element={<AdiabPage />} />
+      <Route path="/oberbek" element={<OberbekPage />} />
     </Routes>
   );
 };

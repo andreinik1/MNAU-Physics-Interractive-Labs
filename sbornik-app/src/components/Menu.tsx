@@ -15,6 +15,7 @@ const Menu: React.FC = () => {
           <Link to="/young1" className="linkStyles">Модуль Юнга при згині балки</Link>
           <Link to="/young2" className="linkStyles">Модуль Юнга при розтягуванні дроту</Link>
           <Link to="/pitomaVaga" className="linkStyles">Визначення питомої ваги та густини тіла</Link>
+          <Link to="/oberbek" className="linkStyles">ВИзначення моменту інерції маятника Обербека</Link>
         </div>
       </div>
 
