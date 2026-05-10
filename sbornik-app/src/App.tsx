@@ -10,6 +10,7 @@ import PoverxPage from "./pages/PoverxPage";
 import VologPage from "./pages/VologPage";
 import AdiabPage from "./pages/AdiabPage";
 import OberbekPage from "./pages/OberbekPage";
+import RozmelPage from "./pages/RozmelPage";
 
 
 const App: React.FC = () => {
@@ -25,6 +26,7 @@ const App: React.FC = () => {
       <Route path="/volog" element={<VologPage />} />
       <Route path="/adiab" element={<AdiabPage />} />
       <Route path="/oberbek" element={<OberbekPage />} />
+      <Route path="/rozmel" element={<RozmelPage />} />
     </Routes>
   );
 };

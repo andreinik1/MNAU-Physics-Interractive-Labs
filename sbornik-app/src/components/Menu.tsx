@@ -15,7 +15,7 @@ const Menu: React.FC = () => {
           <Link to="/young1" className="linkStyles">Модуль Юнга при згині балки</Link>
           <Link to="/young2" className="linkStyles">Модуль Юнга при розтягуванні дроту</Link>
           <Link to="/pitomaVaga" className="linkStyles">Визначення питомої ваги та густини тіла</Link>
-          <Link to="/oberbek" className="linkStyles">ВИзначення моменту інерції маятника Обербека</Link>
+          <Link to="/oberbek" className="linkStyles">Визначення моменту інерції маятника Обербека</Link>
         </div>
       </div>
 
@@ -26,6 +26,7 @@ const Menu: React.FC = () => {
           <Link to="/poverx" className="linkStyles">Визначення коефіцієнта поверхневого натягу методом відриву краплі</Link>
           <Link to="/volog" className="linkStyles">Визначення вологості атмосферного повітря</Link>
           <Link to="/adiab" className="linkStyles">Визначення відношення молярних теплоємностей повітря методом адіабатичного розширення</Link>
+          <Link to="/rozmel" className="linkStyles">Визначення коефіцієнта лінійного розширення металу</Link>
         </div>
       </div>
     </div>
