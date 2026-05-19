@@ -55,7 +55,7 @@ export default function VologLab() {
       <h1 className={styles.title}>Лабораторна робота</h1>
       <h2 className={styles.subtitle}>Визначення вологості атмосферного повітря</h2>
       
-      <div className={styles.mainGrid} style={{maxWidth: "1200px"}}>
+      <div className={styles.mainGrid} style={{maxWidth: "100%", minWidth: "100%"}}>
         <div>
           <VologMeta />
           <VologControls 

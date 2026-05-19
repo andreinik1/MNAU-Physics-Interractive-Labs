@@ -35,7 +35,7 @@ export default function PendulumApp() {
       <h2 className={styles.title} style={{ marginTop: "0", textAlign: "center", fontSize: "24px" }}>Визначення прискорення вільного падіння за допомогою
         математичного маятника
       </h2>
-      <div className={styles.mainGrid}>
+      <div className={styles.mainGrid} style={{ minWidth: "100%", maxWidth: "100%" }}>
         <PendulumMeta />
         <div className={styles.controlsCol}>
           <PendulumControls

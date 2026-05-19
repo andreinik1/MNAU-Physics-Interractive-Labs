@@ -59,7 +59,7 @@ export default function AdiabLab() {
   return (
     <main className={styles.app}>
       <h1 className={styles.title}>Лабораторна робота</h1>
-      <div className={styles.mainGrid} style={{ maxWidth: "1200px" }}>
+      <div className={styles.mainGrid} style={{ minWidth: "100%", maxWidth: "100%" }}>
         <div className={styles.leftCol}>
           <AdiabMeta />
           <AdiabControls

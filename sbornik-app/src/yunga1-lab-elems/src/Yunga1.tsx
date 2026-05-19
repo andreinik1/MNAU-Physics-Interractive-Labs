@@ -19,10 +19,10 @@ export default function YoungApp() {
         Визначення модуля Юнга при згині стержня
       </h2>
 
-      <div className={styles.mainGrid}>
+      <div className={styles.mainGrid} style={{minWidth: "100%", maxWidth: "100%"}}>
         <div className={styles.controlsCol}>
-        <Yunga1Meta/>  
-	<Yunga1Controls
+          <Yunga1Meta />
+          <Yunga1Controls
             force={force}
             setForce={setForce}
             length={length}

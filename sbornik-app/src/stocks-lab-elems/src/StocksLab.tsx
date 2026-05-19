@@ -16,8 +16,8 @@ export default function StocksLab() {
       <h2 className={styles.subtitle}>
         Визначення коефіцієнта в'язкості рідини методом Стокса
       </h2>
-      <StocksMeta />
-      <div style={{ maxWidth: "1200px" ,display: "flex", flexDirection: "column", gap: "2rem" }}>
+      <div style={{ maxWidth: "100%", minWidth: "100%", display: "flex", flexDirection: "column", gap: "2rem" }}>
+        <StocksMeta />
         <div>
           <StocksControls l={l} setL={setL} d={d} setD={setD} t={t} setT={setT} />
         </div>

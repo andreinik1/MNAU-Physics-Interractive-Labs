@@ -31,7 +31,7 @@ const [validResults, setValidResults] = useState<ValidationResult[]>([]);
   };
 
   return (
-    <section className={styles.inputCard} style={{ marginTop: "30px", maxWidth: "1200px"}}>
+    <section className={styles.inputCard} style={{ marginTop: "30px"}}>
       <h2>Таблиця вимірювань</h2>
       <input
         type="number" value={measurementsCount}

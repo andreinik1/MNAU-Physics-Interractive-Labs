@@ -14,7 +14,7 @@ export default function DensityLab() {
     <main className={styles.app}>
       <h1 className={styles.title}>Лабораторна робота</h1>
       <h2 className={styles.subtitle}>Визначення питомої ваги та густини тіла</h2>
-      <div className={styles.mainGrid}>
+      <div className={styles.mainGrid} style={{minWidth: "100%", maxWidth: "100%"}}>
         <div>
           <DensityMeta />
           <DensityControls p1={p1} setP1={setP1} p2={p2} setP2={setP2} p3={p3} setP3={setP3} />

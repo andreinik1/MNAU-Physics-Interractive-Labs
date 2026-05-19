@@ -20,7 +20,7 @@ export default function OberbekLab() {
       <h2 className={styles.subtitle}>
         Визначення моменту інерції маятника Обербека
       </h2>
-      <div className={styles.mainGrid} style={{ maxWidth: "1300px" }}>
+      <div className={styles.mainGrid} style={{ minWidth: "100%", maxWidth: "100%" }}>
         <div className={styles.leftCol}>
           <OberbekMeta />
           <OberbekControls

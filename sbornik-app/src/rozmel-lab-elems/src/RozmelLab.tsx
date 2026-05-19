@@ -18,11 +18,11 @@ export default function ExpansionLab() {
     <main className={styles.app}>
       <h1 className={styles.title}>Лабораторна робота</h1>
       <h2 className={styles.subtitle}>Коефіцієнт лінійного розширення металу</h2>
-      <RozmelMeta />
 
-      <div className={styles.mainGrid}>
+      <div className={styles.mainGrid} style={{ minWidth: "100%", maxWidth: "100%" }}>
+        <RozmelMeta />
         <div className={styles.controlsCol}>
-          <section className={styles.inputCard}>
+          <section className={styles.inputCard} style={{backgroundColor: "white", border: "1px solid #e5e7eb", marginBottom: "30px", borderRadius: "10px", padding: "20px"}}>
             <h3>Керування установкою</h3>
             <div style={{ marginBottom: "15px" }}>
               <button
@@ -46,14 +46,16 @@ export default function ExpansionLab() {
               isOn={isOn}
             />
           </section>
+
+          <div className={styles.canvasWrapper}>
+            <RozmelCanvas u={u} i={i} dl={dl} isOn={isOn} />
+          </div>
+
+          <LabTable />
         </div>
 
-        <div className={styles.canvasWrapper}>
-          <RozmelCanvas u={u} i={i} dl={dl} isOn={isOn} />
-        </div>
       </div>
 
-      <LabTable />
     </main>
   );
 }

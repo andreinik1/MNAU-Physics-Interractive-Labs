@@ -17,7 +17,7 @@ export default function PoverxLab() {
     <main className={styles.app}>
       <h1 className={styles.title}>Лабораторна робота</h1>
       <h2 className={styles.subtitle}>Визначення коефіцієнта поверхневого натягу</h2>
-      <div className={styles.mainGrid} style={{ maxWidth: "1200px" }}>
+      <div className={styles.mainGrid} style={{ maxWidth: "100%", minWidth: "100%" }}>
         <PoverxMeta />
         <PoverxControls
           n={n} setN={setN}
