@@ -6,8 +6,8 @@ import StocksMeta from "./components/StocksMeta";
 import styles from "./App.module.scss";
 
 export default function StocksLab() {
-  const [l, setL] = useState(0.2);
-  const [d, setD] = useState(0.004);
+  const [l, setL] = useState<string | null>("0.2");
+  const [d, setD] = useState<string | null>("0.004");
   const [t, setT] = useState(0);
 
   return (

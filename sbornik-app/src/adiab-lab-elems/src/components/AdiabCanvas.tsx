@@ -2,11 +2,15 @@ import { useEffect, useRef } from "react";
 import { drawAdiab } from "../canvas/drawAdiab";
 
 interface Props { 
-  displayH: number; h1: number; h2: number;
-  isCompressorOn: boolean; isSiphonPressed: boolean; isTubeConnected: boolean;
+  displayH: number; 
+  h1: number; 
+  h2: number;
+  isCompressorOn: boolean; 
+  isSiphonPressed: boolean; 
+  isTubeConnected: boolean;
 }
 
-export function AdiabCanvas(props: Props) {
+export function AdiabCanvas({ h1, h2, isCompressorOn, isSiphonPressed, isTubeConnected }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -21,16 +25,22 @@ export function AdiabCanvas(props: Props) {
       canvas.width = wrapper.clientWidth;
       canvas.height = wrapper.clientHeight;
       drawAdiab(
-        ctx, canvas.width, canvas.height, 
-        props.h1, props.h2,
-        props.isCompressorOn, props.isSiphonPressed, props.isTubeConnected
+        ctx, 
+        canvas.width, 
+        canvas.height, 
+        h1, 
+        h2,
+        isCompressorOn, 
+        isSiphonPressed, 
+        isTubeConnected
       );
     };
 
     render();
+
     window.addEventListener("resize", render);
     return () => window.removeEventListener("resize", render);
-  }, [props]);
+  }, [h1, h2, isCompressorOn, isSiphonPressed, isTubeConnected]);
 
   return (
     <div ref={wrapperRef} style={{ width: "100%", height: "500px", background: "#fff", borderRadius: "12px", border: "1px solid #e2e8f0" }}>

@@ -2,9 +2,9 @@ import { useEffect, useRef } from "react";
 import { drawPoverx } from "../canvas/drawPoverx";
 
 interface Props {
-  n: number;
-  targetN: number;
-  d: number;
+  n: string | null;
+  targetN: string | null;
+  d: string | null;
   isFlowing: boolean;
   mass: number;
   m0: number;
@@ -25,7 +25,7 @@ export function PoverxCanvas({ n, targetN, d, isFlowing, mass, m0 }: Props) {
     const render = () => {
       canvas.width = wrapper.clientWidth;
       canvas.height = wrapper.clientHeight;
-      drawPoverx(ctx, canvas.width, canvas.height, n, targetN, d, isFlowing, mass, m0);
+      drawPoverx(ctx, canvas.width, canvas.height, n ? parseInt(n) : 0, targetN ? parseInt(targetN) : 50, d ? parseFloat(d) : 0.004, isFlowing, mass, m0);
       frameId = requestAnimationFrame(render);
     };
     render();

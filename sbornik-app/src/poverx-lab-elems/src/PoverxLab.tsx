@@ -6,8 +6,8 @@ import LabTable from "./components/LabTable";
 import styles from "./App.module.scss";
 
 export default function PoverxLab() {
-  const [n, setN] = useState(50);
-  const [d, setD] = useState(0.004);
+  const [n, setN] = useState<string | null>("50");
+  const [d, setD] = useState<string | null>("0.004");
   const [currentN, setCurrentN] = useState(0);
   const [isFlowing, setIsFlowing] = useState(false);
   const [m0] = useState(0.0420);
@@ -29,7 +29,7 @@ export default function PoverxLab() {
         />
         <LabTable />
         <div className={styles.canvasContainer}>
-          <PoverxCanvas n={currentN} targetN={n} d={d} isFlowing={isFlowing} mass={mass} m0={m0} />
+          <PoverxCanvas n={currentN.toString()} targetN={n} d={d} isFlowing={isFlowing} mass={mass} m0={m0} />
         </div>
       </div>
     </main>

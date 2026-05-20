@@ -6,9 +6,9 @@ import LabTable from "./components/LabTable";
 import styles from "./App.module.scss";
 
 export default function DensityLab() {
-  const [p1, setP1] = useState(0);
-  const [p2, setP2] = useState(0);
-  const [p3, setP3] = useState(0);
+  const [p1, setP1] = useState<string | null>(null);
+  const [p2, setP2] = useState<string | null>(null);
+  const [p3, setP3] = useState<string | null>(null);
 
   return (
     <main className={styles.app}>
@@ -21,7 +21,7 @@ export default function DensityLab() {
         </div>
         <LabTable />
         <div className={styles.canvasContainer}>
-          <DensityCanvas p1={p1} p2={p2} p3={p3} />
+          <DensityCanvas p1={p1 ?+p1 : 0} p2={p2 ?+p2 : 0} p3={p3 ?+p3 : 0} />
         </div>
       </div>
     </main>

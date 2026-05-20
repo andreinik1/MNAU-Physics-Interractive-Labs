@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react";
 import { drawStocks } from "../canvas/drawStocks";
 
 interface Props {
-  l: number;
-  d: number;
+  l: string | null;
+  d: string | null;
   t: number;
 }
 
@@ -22,7 +22,7 @@ export function StocksCanvas({ t, l, d }: Props) {
     const render = () => {
       canvas.width = wrapperRef.current?.clientWidth || 400;
       canvas.height = wrapperRef.current?.clientHeight || 600;
-      drawStocks(ctx, canvas.width, canvas.height, t, l, d);
+      drawStocks(ctx, canvas.width, canvas.height, t, l ? parseFloat(l) : 0.2, d ? parseFloat(d) : 0.004);
       animationFrameId = requestAnimationFrame(render);
     };
 

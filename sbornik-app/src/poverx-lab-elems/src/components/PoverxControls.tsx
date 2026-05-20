@@ -2,10 +2,10 @@ import React, { useEffect, useRef } from "react";
 import styles from "./LabContainer.module.scss";
 
 interface Props {
-  n: number;
-  setN: (v: number) => void;
-  d: number;
-  setD: (v: number) => void;
+  n: string | null;
+  setN: (v: string | null) => void;
+  d: string | null;
+  setD: (v: string | null) => void;
   currentN: number;
   setCurrentN: React.Dispatch<React.SetStateAction<number>>;
   isFlowing: boolean;
@@ -27,11 +27,11 @@ const PoverxControls: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (isFlowing && currentN < n) {
+    if (isFlowing && currentN < (n ? parseInt(n) : 50)) {
       // Інтервал між появою крапель (збільшив до 800мс для плавності)
       timerRef.current = setInterval(() => {
         setCurrentN((prev: number) => {
-          if (prev >= n) {
+          if (prev >= (n ? parseInt(n) : 50)) {
             setIsFlowing(false);
             return prev;
           }
@@ -39,7 +39,7 @@ const PoverxControls: React.FC<Props> = ({
 
           // ФІЗИКА РОЗРАХУНКУ
           const sigmaWater = 0.072; 
-          const baseDropMass = (Math.PI * d * sigmaWater) / 9.81;
+          const baseDropMass = (Math.PI * (d ? parseFloat(d) : 0.004) * sigmaWater) / 9.81;
           const randomFactor = 0.98 + Math.random() * 0.04;
           const dropWeight = baseDropMass * randomFactor;
 
@@ -48,7 +48,7 @@ const PoverxControls: React.FC<Props> = ({
             setMass((prevMass: number) => prevMass + dropWeight);
           }, 350);
 
-          if (next >= n) {
+          if (next >= (n ? parseInt(n) : 50)) {
             setIsFlowing(false);
             if (timerRef.current) clearInterval(timerRef.current);
           }
@@ -70,25 +70,25 @@ const PoverxControls: React.FC<Props> = ({
       <div className={styles.formInline}>
         <div>
           <label>n (ціль): </label>
-          <input type="number" value={n || ""} onChange={(e) => setN(+e.target.value)} disabled={isFlowing}/>
+          <input type="number" value={n || ""} onChange={(e) => setN(e.target.value)} disabled={isFlowing}/>
         </div>
         <div>
           <label>d (м): </label>
-          <input type="number" step="0.0001" value={d || ""} onChange={(e) => setD(+e.target.value)} disabled={isFlowing}/>
+          <input type="number" step="0.0001" value={d || ""} onChange={(e) => setD(e.target.value)} disabled={isFlowing}/>
         </div>
-        <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+        <div style={{ display: "flex", gap: "10px"}}>
           <button 
             className={styles.downloadBtn} 
             onClick={startFlow}
-            style={{ background: "#22c55e", color: "white", flex: 1 }}
+            style={{ background: "#22c55e", color: "white",  display: "block"}}
             disabled={isFlowing}
           >
-            Старт (0/{n})
+            Старт
           </button>
           <button 
             className={styles.downloadBtn} 
             onClick={() => setIsFlowing(false)}
-            style={{ background: "#ef4444", color: "white", flex: 1 }}
+            style={{ background: "#ef4444", color: "white", display: "inline-block"}}
             disabled={!isFlowing}
           >
             Стоп

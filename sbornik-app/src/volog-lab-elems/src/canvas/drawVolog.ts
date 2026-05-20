@@ -77,9 +77,19 @@ export function drawPsychrometer(
 
     // Підписи температур
     ctx.fillStyle = "#0f172a";
-    ctx.font = "bold 16px Inter, Arial";
+    ctx.font = "bold 15px Inter, Arial";
+    
+    // Якщо це лівий термометр (сухий) — зміщуємо вліво від шкали, якщо правий (вологий) — вправо
+    if (!isWetTerm) {
+      ctx.textAlign = "right";
+      ctx.fillText(`${temp.toFixed(1)}°C`, x - 20, yPos - level + 5);
+    } else {
+      ctx.textAlign = "left";
+      ctx.fillText(`${temp.toFixed(1)}°C`, x + 20, yPos - level + 5);
+    }
+    
+    // Підпис знизу залишаємо по центру
     ctx.textAlign = "center";
-    ctx.fillText(`${temp.toFixed(1)}°C`, x, yPos - level - 15);
     ctx.font = "12px Inter, Arial";
     ctx.fillText(label, x, yPos + 35);
   };

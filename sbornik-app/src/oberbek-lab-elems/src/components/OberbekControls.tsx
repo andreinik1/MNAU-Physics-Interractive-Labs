@@ -4,9 +4,9 @@ import styles from "./LabContainer.module.scss";
 interface Props {
   h: number; setH: (v: number) => void;
   t: number; setT: (v: number) => void;
-  m: number; setM: (v: number) => void;
+  m: string | null; setM: (v: string | null) => void;
   l: number; setL: (v: number) => void;
-  d: number; setD: (v: number) => void;
+  d: string | null; setD: (v: string | null) => void;
   isRunning?: boolean;
   onStart?: () => void;
   hCurrent?: number;
@@ -48,11 +48,11 @@ const OberbekControls: React.FC<Props> = ({ h, setH, t, m, setM, l, setL, d, set
         <div style={{ width: "40px" }}></div>
         <div style={{ flex: 1, padding: "10px" }}>
           <label>Маса вантажу m (кг):</label>
-          <input type="number" step="0.01" value={m} onChange={(e) => setM(+e.target.value)} />
+          <input type="number" step="0.01" value={m ? +m : ""} onChange={(e) => setM(e.target.value)} />
           <br />
           <br />
           <label>Діаметр шківа d (мм):</label>
-          <input type="number" value={d} onChange={(e) => setD(+e.target.value)} />
+          <input type="number" value={d ? +d : ""} onChange={(e) => setD(e.target.value)} />
         </div>
       </div>
     </section>

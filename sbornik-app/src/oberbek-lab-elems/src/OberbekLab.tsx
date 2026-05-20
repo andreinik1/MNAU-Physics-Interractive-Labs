@@ -8,11 +8,11 @@ import { useOberbekAnimation } from "./hooks/useOberbekAnimation";
 
 export default function OberbekLab() {
   const [h, setH] = useState(200); // Теперь 200 см
-  const [m, setM] = useState(0.2);
-  const [d, setD] = useState(40);
+  const [m, setM] = useState<string | null>("0.2");
+  const [d, setD] = useState<string | null>("40");
   const [l, setL] = useState(100);
 
-  const { hCurrent, t, isRunning, start } = useOberbekAnimation(h, m, d, l);
+  const { hCurrent, t, isRunning, start } = useOberbekAnimation(h, m ? +m : 0, d ? +d : 0, l);
 
   return (
     <main className={styles.app}>
@@ -36,7 +36,7 @@ export default function OberbekLab() {
           <LabTable />
         </div>
         <div className={styles.canvasContainer}>
-          <OberbekCanvas h={hCurrent} d={d} l={l} />
+          <OberbekCanvas h={hCurrent} d={d ? +d : 40} l={l} />
         </div>
       </div>
     </main>

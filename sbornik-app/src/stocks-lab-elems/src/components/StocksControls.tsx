@@ -4,8 +4,8 @@ import styles from "./LabContainer.module.scss";
 const getNow = () => Date.now();
 
 interface Props {
-  l: number; setL: (v: number) => void;
-  d: number; setD: (v: number) => void;
+  l: string | null; setL: (v: string | null) => void;
+  d: string | null; setD: (v: string | null) => void;
   t: number; setT: (v: number) => void;
 }
 
@@ -15,7 +15,7 @@ const StocksControls: React.FC<Props> = ({ l, setL, d, setD, t, setT }) => {
   const startTimeRef = useRef<number>(0);
 
   // Фізичний час падіння для автостопу (щоб зупинявся на мітці n)
-  const physicalTime = (18 * 1.48 * (l || 0.2)) / (Math.pow(d || 0.004, 2) * (7800 - 1260) * 9.81);
+  const physicalTime = (18 * 1.48 * (l ? parseFloat(l) : 0.2)) / (Math.pow(d ? parseFloat(d) : 0.004, 2) * (7800 - 1260) * 9.81);
 
   const handleStart = () => {
     setIsActive(true);
@@ -48,7 +48,7 @@ const StocksControls: React.FC<Props> = ({ l, setL, d, setD, t, setT }) => {
             type="number" 
             step="0.01" 
             value={l || ""} 
-            onChange={(e) => setL(parseFloat(e.target.value))} 
+            onChange={(e) => setL(e.target.value)} 
           />
         </div>
         <div>
@@ -57,7 +57,7 @@ const StocksControls: React.FC<Props> = ({ l, setL, d, setD, t, setT }) => {
             type="number" 
             step="0.001" 
             value={d || ""} 
-            onChange={(e) => setD(parseFloat(e.target.value))} 
+            onChange={(e) => setD(e.target.value)} 
           />
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>

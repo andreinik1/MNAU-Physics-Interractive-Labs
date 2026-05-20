@@ -9,14 +9,33 @@ interface Props {
   onDip: () => void;
   onFan: () => void;
   onReset: () => void;
+  t1Input: string;
+  t2Input: string;
+  onT1Change: (val: string) => void;
+  onT2Change: (val: string) => void;
 }
 
-const VologControls: React.FC<Props> = ({ timer, isDipping, isFanRunning, isWet, onDip, onFan, onReset }) => {
+const VologControls: React.FC<Props> = ({
+  timer,
+  isDipping,
+  isFanRunning,
+  isWet,
+  onDip,
+  onFan,
+  onReset,
+  t1Input,
+  t2Input,
+  onT1Change,
+  onT2Change,
+}) => {
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60);
     const sec = s % 60;
-    return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+    return `${m}:${sec < 10 ? "0" : ""}${sec}`;
   };
+
+  // Блокуємо інпути, якщо експеримент уже почався
+  const isStarted = isWet || isDipping || isFanRunning || timer > 0;
 
   return (
     <section className={styles.inputCard} style={{ marginBottom: "30px" }}>
@@ -26,6 +45,37 @@ const VologControls: React.FC<Props> = ({ timer, isDipping, isFanRunning, isWet,
           {formatTime(timer)}
         </div>
       </div>
+
+      {/* Поля для введення початкових температур */}
+      <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "25%", marginRight: "20px" }}>
+          <label style={{ fontSize: "14px", fontWeight: "500", color: "#475569" }}>
+            ТЕМП. СУХОГО (°C)
+          </label>
+          <input
+            type="text"
+            value={t1Input}
+            disabled={isStarted}
+            onChange={(e) => onT1Change(e.target.value)}
+            placeholder="Напр. 22.5"
+            style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", width: "100%" }}
+          />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "25%" }}>
+          <label style={{ fontSize: "14px", fontWeight: "500", color: "#475569" }}>
+            ТЕМП. ВОЛОГОГО (°C)
+          </label>
+          <input
+            type="text"
+            value={t2Input}
+            disabled={isStarted}
+            onChange={(e) => onT2Change(e.target.value)}
+            placeholder="Напр. 22.5"
+            style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", width: "100%" }}
+          />
+        </div>
+      </div>
+
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
         <button
           onClick={onDip}
