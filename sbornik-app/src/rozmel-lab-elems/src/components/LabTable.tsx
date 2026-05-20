@@ -12,7 +12,7 @@ interface ValidationResult {
 
 const LabTable: React.FC = () => {
   const [measurementsCount, setMeasurementsCount] = useState("3");
-const [validResults, setValidResults] = useState<ValidationResult[]>([]);
+  const [validResults, setValidResults] = useState<ValidationResult[]>([]);
   const createRow = (): Measure => ({ I: "", U: "", l1: "350", l2: "", dl: "", R1: "4.77", R2: "", dT: "", alpha: "" });
   const [measures, setMeasures] = useState<Measure[]>(Array.from({ length: 3 }, createRow));
 
@@ -31,7 +31,7 @@ const [validResults, setValidResults] = useState<ValidationResult[]>([]);
   };
 
   return (
-    <section className={styles.inputCard} style={{ marginTop: "30px"}}>
+    <section className={styles.inputCard} style={{ marginTop: "30px", marginBottom: "30px" }}>
       <h2>Таблиця вимірювань</h2>
       <input
         type="number" value={measurementsCount}
@@ -80,8 +80,8 @@ const [validResults, setValidResults] = useState<ValidationResult[]>([]);
           </tbody>
         </table>
       </div>
-      <button onClick={handleCheck} className={styles.downloadBtn} style={{ marginTop: "15px" }}>
-        ПЕРЕВІРИТИ ДАНІ
+      <button onClick={handleCheck} className={styles.downloadBtn} style={{ marginTop: "20px", color: "white", backgroundColor: "#3b82f6" }}>
+        Перевірити дані
       </button>
     </section>
   );
