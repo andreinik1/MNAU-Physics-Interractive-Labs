@@ -25,7 +25,7 @@ const LabTable: React.FC = () => {
       });
       const data = await res.json();
       setValidResults(data.detailed_results || []);
-    } catch {
+    } catch { 
       alert("Сервер не відповідає");
     }
   };
