@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import { validateStocks } from "../../../utils/experimentValidator";
 
 interface Measure {
   rho1: string; rho2: string; g: string;
@@ -13,7 +14,6 @@ interface Measure {
 interface DetailedResult { [key: string]: boolean | undefined; }
 
 const LabTable: React.FC = () => {
-  const [errors, setErrors] = useState<string[]>([]);
   const [validResults, setValidResults] = useState<DetailedResult[]>([]);
 
   const createEmptyRow = (): Measure => ({
@@ -37,26 +37,20 @@ const LabTable: React.FC = () => {
     return rowResult[fieldName] ? styles.inputCorrect : styles.inputIncorrect;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8080/stocks-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ experiment: "stocks", measures }),
-      });
-      const data = await response.json();
-      if (data.detailed_results) setValidResults(data.detailed_results);
-    } catch {
-      setErrors(["Не вдалося з'єднатися з сервером"]);
-    }
+
+    // Приводим тип "measures" к типу "StocksMeasure[]", используя ключевое слово "as"
+    const results = validateStocks(measures as unknown as Record<string, string>[]);
+
+    // Записываем результат проверки в стейт для подсветки
+    setValidResults(results);
   };
 
   return (
     <div className={styles.wrapper}>
       <section className={styles.inputCard}>
         <h2>Результати вимірювань</h2>
-        {errors.length > 0 && <div className={styles.errorBox}>{errors[0]}</div>}
         <form onSubmit={handleSubmit}>
           <div style={{ overflowX: "auto" }}>
             <table className={styles.table}>

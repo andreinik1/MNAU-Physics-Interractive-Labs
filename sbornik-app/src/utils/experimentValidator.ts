@@ -195,3 +195,118 @@ export function validateDensity(measures: DensityMeasure[]) {
 
   return detailedResults;
 }
+
+export interface OberbekMeasure {
+  // Статические и прямые измерения (не валидируем)
+  g: string; m: string; "4m_1": string; 
+  h: string; t: string; d: string; r: string;
+  // Расчётные формульные поля (валидируем!)
+  a: string; epsilon: string; I0: string; I: string;
+  I_cep: string; delta_I: string; delta_I_cep: string;
+}
+
+export function validateOberbek(measures: OberbekMeasure[]) {
+  const detailedResults: Record<string, boolean>[] = [];
+  let ISum = 0;
+  const msvI: number[] = [];
+
+  // Первый проход: валидация строчных формул (a, epsilon, I0, I)
+  for (const m of measures) {
+    const check: Record<string, boolean> = { a: true, epsilon: true, I0: true, I: true };
+    
+    const g = pF(m.g), mMass = pF(m.m);
+    const h = pF(m.h), t = pF(m.t), d = pF(m.d), r = pF(m.r);
+    
+    const aUser = pF(m.a), epsilonUser = pF(m.epsilon);
+    const I0User = pF(m.I0), IUser = pF(m.I);
+
+    // 1. Ускорение a = 2h / t^2
+    const aCalc = (2 * h) / (t ** 2 || 1);
+    if (!isClose(aUser, aCalc, 0.01)) check.a = false;
+
+    // 2. Угловое ускорение epsilon = a / r
+    // Если в таблице r — это радиус, используем его, иначе r = d / 2
+    const radius = r > 0 ? r : d / 2;
+    const epsilonCalc = aCalc / (radius || 1);
+    if (!isClose(epsilonUser, epsilonCalc, 0.01)) check.epsilon = false;
+
+    // 3. Момент инерции I0 = m * r^2 * (g/a - 1)
+    const I0Calc = mMass * (radius ** 2) * ((g / (aCalc || 1)) - 1);
+    if (!isClose(I0User, I0Calc, 0.01)) check.I0 = false;
+
+    // 4. Момент инерции I (в рамках таблицы без h1 принимаем равным основному расчёту моментов)
+    if (!isClose(IUser, I0Calc, 0.01)) check.I = false;
+
+    ISum += I0Calc;
+    msvI.push(I0Calc);
+    detailedResults.push(check);
+  }
+
+  const ICep = ISum / (msvI.length || 1);
+  const msvDeltaI = msvI.map(iVal => Math.abs(ICep - iVal));
+  const deltaICep = msvDeltaI.reduce((sum, dVal) => sum + dVal, 0) / (msvDeltaI.length || 1);
+
+  // Второй проход: валидация средних значений и погрешностей (I_cep, delta_I, delta_I_cep)
+  for (let i = 0; i < measures.length; i++) {
+    const m = measures[i];
+    const check: Record<string, boolean> = { I_cep: true, delta_I: true, delta_I_cep: true };
+
+    if (!isClose(pF(m.I_cep), ICep, 0.01)) check.I_cep = false;
+    if (!isClose(pF(m.delta_I), msvDeltaI[i], 0.1)) check.delta_I = false;
+    if (!isClose(pF(m.delta_I_cep), deltaICep, 0.05)) check.delta_I_cep = false;
+
+    detailedResults[i] = { ...detailedResults[i], ...check };
+  }
+
+  return detailedResults;
+}
+
+// ==========================================
+// 6. ЛАБОРАТОРНАЯ: Метод Стокса (/stocks-check)
+// ==========================================
+// Вспомогательные функции остаются вверху файла (isClose, pF)
+
+export function validateStocks(measures: Record<string, string>[]) {
+  const detailedResults: Record<string, boolean>[] = [];
+  let etaSum = 0;
+  const msvEta: number[] = [];
+
+  // 1. Первый проход: вычисляем eta для каждой строки
+  for (const m of measures) {
+    const check: Record<string, boolean> = { 
+      eta: true, eta_avg: true, d_eta: true, d_eta_avg: true 
+    };
+    
+    const rho1 = pF(m.rho1);
+    const rho2 = pF(m.rho2);
+    const g = pF(m.g);
+    const l = pF(m.l);
+    const d = pF(m.d);
+    const t = pF(m.t);
+    const etaUser = pF(m.eta);
+
+    // Формула Стокса
+    const etaCalc = (1 / 18) * g * ((d ** 2 * t) / (l || 1)) * (rho1 - rho2);
+    
+    if (!isClose(etaUser, etaCalc, 0.01)) check.eta = false;
+
+    etaSum += etaCalc;
+    msvEta.push(etaCalc);
+    detailedResults.push(check);
+  }
+
+  const etaAvg = etaSum / (msvEta.length || 1);
+  const msvDEta = msvEta.map(e => Math.abs(etaAvg - e));
+  const dEtaAvg = msvDEta.reduce((a, b) => a + b, 0) / (msvDEta.length || 1);
+
+  // 2. Второй проход: сверяем средние и погрешности по твоим именам полей
+  for (let i = 0; i < measures.length; i++) {
+    const m = measures[i];
+
+    if (!isClose(pF(m.eta_avg), etaAvg, 0.01)) detailedResults[i].eta_avg = false;
+    if (!isClose(pF(m.d_eta), msvDEta[i], 0.1)) detailedResults[i].d_eta = false;
+    if (!isClose(pF(m.d_eta_avg), dEtaAvg, 0.05)) detailedResults[i].d_eta_avg = false;
+  }
+
+  return detailedResults;
+}

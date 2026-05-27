@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import { validateOberbek } from "../../../utils/experimentValidator";
 
 interface Measure {
-  g: string; m: string; m4: string; h: string; t: string; d: string; r: string; // Прямі
-  a: string; eps: string; I0: string; I: string; I_ser: string; delta_I: string; delta_I_ser: string; // Непрямі
+  g: string; m: string; "4m_1": string; h: string; t: string; d: string; r: string; // Прямі
+  a: string; epsilon: string; I0: string; I: string; I_cep: string; delta_I: string; delta_I_cep: string; // Непрямі
 }
 
 interface DetailedResult { [key: string]: boolean | undefined; }
@@ -14,8 +15,8 @@ const LabTable: React.FC = () => {
   const [validResults, setValidResults] = useState<DetailedResult[]>([]);
   const [measures, setMeasures] = useState<Measure[]>(
     Array.from({ length: 3 }, () => ({
-      g: "9.81", m: "", m4: "", h: "", t: "", d: "", r: "",
-      a: "", eps: "", I0: "", I: "", I_ser: "", delta_I: "", delta_I_ser: ""
+      g: "9.81", m: "", "4m_1": "", h: "", t: "", d: "", r: "",
+      a: "", epsilon: "", I0: "", I: "", I_cep: "", delta_I: "", delta_I_cep: ""
     }))
   );
 
@@ -30,19 +31,14 @@ const LabTable: React.FC = () => {
     return rowResult[fieldName] ? styles.inputCorrect : styles.inputIncorrect;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8080/oberbek-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ experiment: "oberbek", measures }),
-      });
-      const data = await response.json();
-      if (data.detailed_results) setValidResults(data.detailed_results);
-    } catch (err) {
-      alert("Помилка сервера: " + err);
-    }
+
+    // Прямой синхронный вызов валидатора Обербека без сетевых запросов
+    const results = validateOberbek(measures);
+
+    // Записываем массив с булевыми флагами проверки полей в стейт результатов
+    setValidResults(results);
   };
 
   return (
