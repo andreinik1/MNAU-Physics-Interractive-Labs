@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import { validateAdiab } from "../../../utils/experimentValidator";
 
 interface Measure {
   h1: string; h2: string; gamma: string;
@@ -31,20 +32,15 @@ const LabTable: React.FC = () => {
     return rowResult[fieldName] ? styles.inputCorrect : styles.inputIncorrect;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8080/adiab-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ experiment: "adiab", measures }),
-      });
-      const data = await response.json();
-      if (data.detailed_results) setValidResults(data.detailed_results);
-    } catch (err) {
-      alert("Помилка сервера");
-      console.error(err);
-    }
+
+    // Если у тебя есть стейт для ошибок (например, setErrors), раскомментируй:
+    // setErrors([]);
+
+    // Вызываем наш валидатор напрямую. Никаких ругательств от TS!
+    const results = validateAdiab(measures);
+    setValidResults(results);
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
+import { validateLinearExpansion } from "../../../utils/experimentValidator";
 
 interface Measure {
   I: string; U: string; l1: string; l2: string; dl: string; R1: string; R2: string; dT: string; alpha: string;
@@ -16,18 +17,12 @@ const LabTable: React.FC = () => {
   const createRow = (): Measure => ({ I: "", U: "", l1: "350", l2: "", dl: "", R1: "4.77", R2: "", dT: "", alpha: "" });
   const [measures, setMeasures] = useState<Measure[]>(Array.from({ length: 3 }, createRow));
 
-  const handleCheck = async () => {
-    try {
-      const res = await fetch("http://127.0.0.1:8080/check-lab", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ measures })
-      });
-      const data = await res.json();
-      setValidResults(data.detailed_results || []);
-    } catch { 
-      alert("Сервер не відповідає");
-    }
+  const handleCheck = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Отправляем массив напрямую, никаких ошибок типов больше нет
+    const results = validateLinearExpansion(measures);
+    setValidResults(results);
   };
 
   return (

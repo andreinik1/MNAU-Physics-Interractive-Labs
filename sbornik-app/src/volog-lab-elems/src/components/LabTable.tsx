@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import { validateVolog } from "../../../utils/experimentValidator";
 
 interface Measure {
   t1: string; t2: string; t_diff: string; E_prime: string; H: string;
@@ -36,19 +37,13 @@ const LabTable: React.FC = () => {
     return rowResult[fieldName] ? styles.inputCorrect : styles.inputIncorrect;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8080/volog-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ experiment: "volog", measures }),
-      });
-      const data = await response.json();
-      if (data.detailed_results) setValidResults(data.detailed_results);
-    } catch {
-      setErrors(["Помилка з'єднання з сервером"]);
-    }
+    setErrors([]);
+
+    // Отправляем массив напрямую, никаких ошибок типов больше нет
+    const results = validateVolog(measures);
+    setValidResults(results);
   };
 
   return (

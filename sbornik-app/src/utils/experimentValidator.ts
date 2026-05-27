@@ -310,3 +310,266 @@ export function validateStocks(measures: Record<string, string>[]) {
 
   return detailedResults;
 }
+
+// ==========================================
+// ЛАБОРАТОРНАЯ: Поверхневий натяг (/poverx-check)
+// ==========================================
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function validatePoverx(measures: any[]) {
+  const detailedResults: Record<string, boolean>[] = [];
+  let sigmaSum = 0;
+  const msvSigma: number[] = [];
+  const g = 9.81; // Стандартная константа ускорения
+
+  // Первый проход: считаем массу M и сигму для каждой строки
+  for (const m of measures) {
+    const check: Record<string, boolean> = {
+      M: true,
+      sigma: true,
+      sigma_avg: true,
+      d_sigma: true,
+      d_sigma_avg: true
+    };
+
+    const n = pF(m.n);
+    const m0 = pF(m.m0);
+    const m1 = pF(m.m1);
+    const d = pF(m.d);
+    
+    const MUser = pF(m.M);
+    const sigmaUser = pF(m.sigma);
+
+    // 1. Проверка массы капель M = m1 - m0
+    const MCalc = m1 - m0;
+    if (!isClose(MUser, MCalc, 0.0001)) check.M = false;
+
+    // 2. Проверка коэффициента поверхностного натяжения
+    const sigmaCalc = (MCalc * g) / (n * Math.PI * d || 1);
+    if (!isClose(sigmaUser, sigmaCalc, 0.01)) check.sigma = false;
+
+    sigmaSum += sigmaCalc;
+    msvSigma.push(sigmaCalc);
+    detailedResults.push(check);
+  }
+
+  const sigmaAvg = sigmaSum / (msvSigma.length || 1);
+  const msvDSigma = msvSigma.map(s => Math.abs(sigmaAvg - s));
+  const dSigmaAvg = msvDSigma.reduce((a, b) => a + b, 0) / (msvDSigma.length || 1);
+
+  // Второй проход: сверяем средние значения и погрешности
+  for (let i = 0; i < measures.length; i++) {
+    const m = measures[i];
+
+    if (!isClose(pF(m.sigma_avg), sigmaAvg, 0.01)) detailedResults[i].sigma_avg = false;
+    if (!isClose(pF(m.d_sigma), msvDSigma[i], 0.1)) detailedResults[i].d_sigma = false;
+    if (!isClose(pF(m.d_sigma_avg), dSigmaAvg, 0.05)) detailedResults[i].d_sigma_avg = false;
+  }
+
+  return detailedResults;
+}
+
+// ==========================================
+// ЛАБОРАТОРНАЯ: Визначення вологості повітря (/volog-check)
+// ==========================================
+//eslint-disable-next-line @typescript-eslint/no-explicit-any 
+export function validateVolog(measures: any[]) {
+  const detailedResults: Record<string, boolean>[] = [];
+  
+  let eSum = 0;
+  let rSum = 0;
+  const msvE: number[] = [];
+  const msvR: number[] = [];
+  
+  const A = 0.0008; // Психрометрическая константа из методички
+
+  // Первый проход: считаем разность, абсолютную (e) и относительную (r) влажность
+  for (const m of measures) {
+    const check: Record<string, boolean> = {
+      t_diff: true,
+      e: true,
+      r: true,
+      e_avg: true,
+      delta_e: true,
+      delta_e_avg: true,
+      r_avg: true,
+      delta_r: true,
+      delta_r_avg: true
+    };
+
+    const t1 = pF(m.t1);
+    const t2 = pF(m.t2);
+    const E_prime = pF(m.E_prime);
+    const H = pF(m.H);
+    const E = pF(m.E);
+    
+    const tDiffUser = pF(m.t_diff);
+    const eUser = pF(m.e);
+    const rUser = pF(m.r);
+
+    // 1. Разность температур t1 - t2
+    const tDiffCalc = t1 - t2;
+    if (!isClose(tDiffUser, tDiffCalc, 0.01)) check.t_diff = false;
+
+    // 2. Абсолютная влажность e = E - A * H * (t1 - t2)
+    const eCalc = E - (A * H * tDiffCalc);
+    if (!isClose(eUser, eCalc, 1.0)) check.e = false; // Допуск пошире, так как Паскали — величины крупные
+
+    // 3. Относительная влажность r = (e / E') * 100
+    const rCalc = (eCalc / (E_prime || 1)) * 100;
+    if (!isClose(rUser, rCalc, 0.5)) check.r = false;
+
+    eSum += eCalc;
+    rSum += rCalc;
+    msvE.push(eCalc);
+    msvR.push(rCalc);
+    
+    detailedResults.push(check);
+  }
+
+  // Расчёт средних величин
+  const eAvg = eSum / (msvE.length || 1);
+  const rAvg = rSum / (msvR.length || 1);
+
+  // Расчет отклонений для каждой строки
+  const msvDeltaE = msvE.map(eVal => Math.abs(eAvg - eVal));
+  const msvDeltaR = msvR.map(rVal => Math.abs(rAvg - rVal));
+
+  // Расчёт средних погрешностей
+  const deltaEAvg = msvDeltaE.reduce((a, b) => a + b, 0) / (msvDeltaE.length || 1);
+  const deltaRAvg = msvDeltaR.reduce((a, b) => a + b, 0) / (msvDeltaR.length || 1);
+
+  // Второй проход: сверяем все средние и погрешности для e и r
+  for (let i = 0; i < measures.length; i++) {
+    const m = measures[i];
+
+    // Проверка статистики для абсолютной влажности e
+    if (!isClose(pF(m.e_avg), eAvg, 1.0)) detailedResults[i].e_avg = false;
+    if (!isClose(pF(m.delta_e), msvDeltaE[i], 1.0)) detailedResults[i].delta_e = false;
+    if (!isClose(pF(m.delta_e_avg), deltaEAvg, 0.5)) detailedResults[i].delta_e_avg = false;
+
+    // Проверка статистики для относительной влажности r
+    if (!isClose(pF(m.r_avg), rAvg, 0.5)) detailedResults[i].r_avg = false;
+    if (!isClose(pF(m.delta_r), msvDeltaR[i], 0.5)) detailedResults[i].delta_r = false;
+    if (!isClose(pF(m.delta_r_avg), deltaRAvg, 0.5)) detailedResults[i].delta_r_avg = false;
+  }
+
+  return detailedResults;
+}
+
+// ==========================================
+// ЛАБОРАТОРНАЯ: Коефіцієнт Пуассона (/adiab-check)
+// ==========================================
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function validateAdiab(measures: any[]) {
+  const detailedResults: Record<string, boolean>[] = [];
+  let gammaSum = 0;
+  const msvGamma: number[] = [];
+
+  // Первый проход: считаем коэффициент гамма для каждой строки
+  for (const m of measures) {
+    const check: Record<string, boolean> = {
+      gamma: true,
+      gamma_avg: true,
+      delta_gamma: true,
+      delta_gamme_avg: true // учитываем твой нейминг с опечаткой
+    };
+
+    const h1 = pF(m.h1);
+    const h2 = pF(m.h2);
+    const gammaUser = pF(m.gamma);
+
+    // Формула: h1 / (h1 - h2)
+    const gammaCalc = h1 / ((h1 - h2) || 1);
+    
+    if (!isClose(gammaUser, gammaCalc, 0.01)) {
+      check.gamma = false;
+    }
+
+    gammaSum += gammaCalc;
+    msvGamma.push(gammaCalc);
+    detailedResults.push(check);
+  }
+
+  const gammaAvg = gammaSum / (msvGamma.length || 1);
+  const msvDeltaGamma = msvGamma.map(g => Math.abs(gammaAvg - g));
+  const deltaGammaAvg = msvDeltaGamma.reduce((a, b) => a + b, 0) / (msvDeltaGamma.length || 1);
+
+  // Второй проход: проверяем средние значения и погрешности
+  for (let i = 0; i < measures.length; i++) {
+    const m = measures[i];
+
+    if (!isClose(pF(m.gamma_avg), gammaAvg, 0.01)) detailedResults[i].gamma_avg = false;
+    if (!isClose(pF(m.delta_gamma), msvDeltaGamma[i], 0.05)) detailedResults[i].delta_gamma = false;
+    if (!isClose(pF(m.delta_gamme_avg), deltaGammaAvg, 0.05)) detailedResults[i].delta_gamme_avg = false;
+  }
+
+  return detailedResults;
+}
+
+//eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function validateLinearExpansion(measures: any[]) {
+  const detailedResults: Record<string, boolean>[] = [];
+
+  // Константы из лабораторной работы (переведены в СИ для расчетов)
+  const L1_M = 0.35;         // Длина l1 = 0.35 м
+  const D_M = 0.4 / 1000;    // Диаметр d = 0.4 мм = 0.0004 м
+  const RHO = 1e-6;          // Удельное сопротивление rho = 10^-6 Ом*м
+  const BETA = 4e-3;         // Температурный коэффициент beta = 4 * 10^-3
+
+  // 1. Предварительно рассчитываем эталонное R1 по формуле (4)
+  // R1 = rho * l1 / (pi * d^2 / 4)
+  const r1Calc = RHO * L1_M / ((Math.PI * Math.pow(D_M, 2)) / 4);
+
+  for (const m of measures) {
+    const check: Record<string, boolean> = {
+      r1: true,
+      r2: true,
+      dt: true,
+      alpha: true
+    };
+
+    // Парсим пользовательские значения из строки таблицы
+    const currentI = pF(m.I);         // Сила тока I (А)
+    const currentU = pF(m.U);         // Напряжение U (В)
+    const currentDl = pF(m.dl);       // Удлинение dl (мм) (на фото колонка подписана как Δl, мм)
+    
+    const userR1 = pF(m.r1);         // Введенное R1
+    const userR2 = pF(m.r2);         // Введенное R2
+    const userDt = pF(m.dt);         // Введенная разность температур Δt
+    const userAlpha = pF(m.alpha);   // Введенный коэффициент α
+
+    // --- Валидация R1 ---
+    if (!isClose(userR1, r1Calc, 0.05)) {
+      check.r1 = false;
+    }
+
+    // --- Валидация R2 ---
+    // Формула: R2 = U / I
+    const r2Calc = currentU / (currentI || 1);
+    if (!isClose(userR2, r2Calc, 0.02)) {
+      check.r2 = false;
+    }
+
+    // --- Валидация Δt ---
+    // Формула: Δt = (R2 - R1) / (R1 * beta)
+    // Используем расчетные значения r2Calc и r1Calc для стабильности, либо пользовательские
+    const dtCalc = (r2Calc - r1Calc) / ((r1Calc * BETA) || 1);
+    if (!isClose(userDt, dtCalc, 0.1)) { // Погрешность чуть выше из-за округлений температур
+      check.dt = false;
+    }
+
+    // --- Валидация альфа (α) ---
+    // Формула: α = Δl / (l1 * Δt)
+    // Внимание: так как dl в таблице дан в 'мм', l1 берем тоже в 'мм' (0.35 м = 350 мм)
+    const L1_MM = L1_M * 1000; 
+    const alphaCalc = currentDl / ((L1_MM * dtCalc) || 1);
+    
+    if (!isClose(userAlpha, alphaCalc, 0.0001)) { // Маленький absolute tolerance, так как альфа порядка 10^-5
+      check.alpha = false;
+    }
+
+    detailedResults.push(check);
+  }
+
+  return detailedResults;
+}

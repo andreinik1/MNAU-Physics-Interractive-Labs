@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import { validatePoverx } from "../../../utils/experimentValidator";
 
 interface Measure {
   n: string; m0: string; m1: string; M: string; d: string;
@@ -34,19 +35,14 @@ const LabTable: React.FC = () => {
     return rowResult[fieldName] ? styles.inputCorrect : styles.inputIncorrect;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8080/poverx-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ experiment: "poverx", measures }),
-      });
-      const data = await response.json();
-      if (data.detailed_results) setValidResults(data.detailed_results);
-    } catch {
-      setErrors(["Помилка з'єднання з сервером"]);
-    }
+    setErrors([]);
+
+    // Прямой расчёт физики и погрешностей по твоей структуре
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const results = validatePoverx(measures as any[]);
+    setValidResults(results);
   };
 
   return (

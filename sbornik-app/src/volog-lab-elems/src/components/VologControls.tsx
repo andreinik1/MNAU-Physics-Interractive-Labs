@@ -61,7 +61,7 @@ const VologControls: React.FC<Props> = ({
             disabled={isStarted}
             onChange={(e) => onT1Change(e.target.value)}
             placeholder="Напр. 22.5"
-            style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", width: "100%" }}
+            style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", width: "90%" }}
           />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "30%" }}>
@@ -74,11 +74,10 @@ const VologControls: React.FC<Props> = ({
             disabled={isStarted}
             onChange={(e) => onT2Change(e.target.value)}
             placeholder="Напр. 22.5"
-            style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", width: "100%" }}
+            style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", width: "90%" }}
           />
         </div>
-        {/* НОВЫЙ ИНПУТ: АТМОСФЕРНОЕ ДАВЛЕНИЕ */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "40%" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "30%" }}>
           <label style={{ fontSize: "12px", fontWeight: "600", color: "#475569" }}>
             ТИСК АТМОСФЕРИ (гПа)
           </label>
