@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
-
+import { validatePendulum } from "../../../utils/experimentValidator"; // Убедись, что путь правильный
 
 interface Measure {
   L: string;
@@ -100,9 +100,10 @@ const LabContainer: React.FC = () => {
     setValidResults([]);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // 1. Локальная валидация (заполнены ли поля, числа ли там и т.д.)
     const validationErrors = validateMeasures();
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
@@ -110,37 +111,14 @@ const LabContainer: React.FC = () => {
     }
 
     setErrors([]);
-    const count = Number(measurementsCount);
-    const payload = { experiment: "pendulum", measures };
 
-    try {
-      const response = await fetch("http://127.0.0.1:8080/pendulum-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    // 2. Вызываем наш JS-валидатор напрямую без всяких fetch
+    // Он сам пробежится по массиву 'measures' и вернет полный результат
+    const results = validatePendulum(measures);
 
-      const data = await response.json();
-
-      if (data.detailed_results) {
-        const rawResults: DetailedResult[] = data.detailed_results;
-
-        // Магия объединения:
-        // Мы берем только первые 'count' элементов и подмешиваем в них
-        // данные из второй половины массива (i + count)
-        const mergedResults = rawResults.slice(0, count).map((item, i) => {
-          const summaryData = rawResults[i + count] || {};
-          return {
-            ...item,
-            ...summaryData,
-          };
-        });
-
-        setValidResults(mergedResults);
-      }
-    } catch {
-      setErrors(["Не вдалося з'єднатися з сервером"]);
-    }
+    // 3. Просто записываем готовый результат в стейт. 
+    // Никаких склеиваний половин массивов делать не надо — всё уже внутри!
+    setValidResults(results);
   };
 
   // Хелпер для получения класса валидации ячейки

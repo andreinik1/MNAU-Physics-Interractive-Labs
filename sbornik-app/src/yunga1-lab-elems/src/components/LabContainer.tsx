@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import { validateYunga1 } from "../../../utils/experimentValidator";
 
 interface Measure {
   F: string;          // F, H
@@ -75,35 +76,23 @@ const LabContainer: React.FC = () => {
     setValidResults([]);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // 1. Локальная валидация полей ввода
     const validationErrors = validateMeasures();
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
       return;
     }
-    setErrors([]);
-    const count = Number(measurementsCount);
-    const payload = { experiment: "young_modulus", measures }; // Изменили название эксперимента
 
-    try {
-      const response = await fetch("http://127.0.0.1:8080/yunga1-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      if (data.detailed_results) {
-        const rawResults: DetailedResult[] = data.detailed_results;
-        const mergedResults = rawResults.slice(0, count).map((item, i) => ({
-          ...item,
-          ...(rawResults[i + count] || {}),
-        }));
-        setValidResults(mergedResults);
-      }
-    } catch {
-      setErrors(["Не вдалося з'єднатися з сервером"]);
-    }
+    setErrors([]);
+
+    // 2. Прямой вызов JS-валидатора вместо fetch запроса
+    const results = validateYunga1(measures);
+
+    // 3. Записываем готовый массив проверок в стейт без лишних манипуляций
+    setValidResults(results);
   };
 
   const getFieldClassName = (rowIndex: number, fieldName: string) => {

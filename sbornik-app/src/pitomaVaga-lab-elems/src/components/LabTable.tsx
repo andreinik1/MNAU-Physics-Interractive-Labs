@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import { validateDensity } from "../../../utils/experimentValidator";
 
 interface Measure {
   P1: string;    // P1, H
@@ -73,29 +74,23 @@ const LabTable: React.FC = () => {
     setValidResults([]);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // 1. Локальная валидация полей ввода
     const validationErrors = validateMeasures();
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
       return;
     }
-    setErrors([]);
-    const payload = { experiment: "density", measures };
 
-    try {
-      const response = await fetch("http://127.0.0.1:8080/density-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await response.json();
-      if (data.detailed_results) {
-        setValidResults(data.detailed_results);
-      }
-    } catch {
-      setErrors(["Не вдалося з'єднатися з сервером"]);
-    }
+    setErrors([]);
+
+    // 2. Прямой вызов нашего валидатора (с уже исправленными внутри багами формул!)
+    const results = validateDensity(measures);
+
+    // 3. Записываем результаты проверки в стейт
+    setValidResults(results);
   };
 
   const getFieldClassName = (rowIndex: number, fieldName: string) => {

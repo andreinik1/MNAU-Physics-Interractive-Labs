@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
+import { validateYunga2 } from "../../../utils/experimentValidator"; // Убедись, что путь к файлу правильный
+
 
 interface Measure {
   F: string; f_nav: string; f_rozv: string; f_avg: string;
@@ -12,7 +14,6 @@ interface Measure {
 interface DetailedResult { [key: string]: boolean | undefined; }
 
 const LabContainer: React.FC = () => {
-  const [errors, setErrors] = useState<string[]>([]);
   const [measurementsCount, setMeasurementsCount] = useState<string>("3");
   const [measures, setMeasures] = useState<Measure[]>(
     Array.from({ length: 3 }, () => ({
@@ -48,20 +49,14 @@ const LabContainer: React.FC = () => {
     setValidResults([]);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8080/yunga2-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ experiment: "young_modulus", measures }),
-      });
-      const data = await response.json();
-      if (data.detailed_results) setValidResults(data.detailed_results);
-    } catch {
-      setErrors(["Не вдалося з'єднатися з сервером"]);
-      console.log(errors);
-    }
+
+    // 1. Вызываем JS-валидатор напрямую вместо fetch запроса
+    const results = validateYunga2(measures);
+
+    // 2. Записываем готовый результат проверок в стейт
+    setValidResults(results);
   };
 
   const getFieldClass = (idx: number, field: string) => {
@@ -71,7 +66,7 @@ const LabContainer: React.FC = () => {
   };
 
   return (
-    <div className={styles.wrapper} style={{marginBottom: "30px"}}>
+    <div className={styles.wrapper} style={{ marginBottom: "30px" }}>
       <section className={styles.inputCard}>
         <h2>Лабораторна робота: Визначення модуля Юнга</h2>
         <div className={styles.countContainer}>
