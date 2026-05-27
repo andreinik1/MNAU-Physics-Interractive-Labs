@@ -7,9 +7,10 @@ import styles from "./App.module.scss";
 import tablePsix from "./table_psix.jpg";
 
 export default function VologLab() {
-  // --- СОСТОЯНИЕ (В строковом формате для удобного ввода) ---
+  // --- СОСТОЯНИЕ ---
   const [t1Input, setT1Input] = useState<string>("22.5");
   const [t2Input, setT2Input] = useState<string>("22.5");
+  const [pInput, setPInput] = useState<string>("1013.25"); // Добавили давление (hPa)
 
   // Внутреннее числовое состояние для симуляции падения температуры
   const [liveT2, setLiveT2] = useState<number | null>(null);
@@ -19,10 +20,10 @@ export default function VologLab() {
   const [isFanRunning, setIsFanRunning] = useState(false);
   const [timer, setTimer] = useState(0);
 
-  // Парсим строковые значения для Canvas и вычислений
+  // Парсим значения
   const parsedT1 = parseFloat(t1Input.replace(",", ".")) || 0;
-  // Если вентилятор запущен, берем текущее динамическое значение liveT2, иначе начальное введенное
   const parsedT2 = liveT2 !== null ? liveT2 : (parseFloat(t2Input.replace(",", ".")) || 0);
+  const parsedP = parseFloat(pInput.replace(",", ".")) || 1013.25; // Числовое давление
 
   // Функции управления
   const startDipping = () => {
@@ -31,13 +32,12 @@ export default function VologLab() {
     setTimeout(() => {
       setIsDipping(false);
       setIsWet(true);
-    }, 3000); // 3 секунды на "макнуть в воду"
+    }, 3000);
   };
 
   const handleFanToggle = () => {
     setIsFanRunning(prev => {
       const nextState = !prev;
-      // Инициализируем liveT2 стартовым числом прямо в момент клика на кнопку "Завести вент."
       if (nextState && liveT2 === null) {
         setLiveT2(parseFloat(t2Input.replace(",", ".")) || 0);
       }
@@ -53,7 +53,8 @@ export default function VologLab() {
     setIsDipping(false);
   };
 
-  // Эффект работы вентилятора (теперь без синхронных setState внутри)
+  // Эффект работы вентилятора
+  // Ефект роботи вентилятора з чесною лінійною фізикою охолодження
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | undefined;
 
@@ -63,15 +64,35 @@ export default function VologLab() {
         if (isWet) {
           setLiveT2(prev => {
             const currentT2 = prev !== null ? prev : (parseFloat(t2Input.replace(",", ".")) || 0);
-            const targetT2 = parsedT1 - 5.5; // Предел охлаждения относительно выбранной T1
-            return currentT2 > targetT2 ? currentT2 - 0.02 : currentT2;
+
+            // 1. Коефіцієнт впливу тиску на граничну температуру
+            // Нормальний тиск = 1013.25 hPa. Якщо тиск менший — випаровування сильніше, дельта більша.
+            const pressureFactor = parsedP / 1013.25;
+            const baseMaxDelta = 6.0;
+            const targetT2 = parsedT1 - (baseMaxDelta / pressureFactor);
+
+            // 2. Чесна швидкість падіння температури в секунду (залежить від тиску)
+            // При нормальному тиску крок = 0.02°C в секунду.
+            // Якщо тиск високий (наприклад, 1035), ділимо на 1.02 -> крок менший (падає повільніше).
+            // Якщо тиск низький (наприклад, 980), ділимо на 0.96 -> крок більший (падає швидше).
+            const baseStep = 0.02;
+            const dynamicStep = baseStep / pressureFactor;
+
+            // Перевіряємо, чи ми вже не досягли ліміту
+            if (currentT2 > targetT2) {
+              const nextT2 = currentT2 - dynamicStep;
+              // Щоб випадково не проскочити targetT2 через математику плаваючої крапки
+              return nextT2 < targetT2 ? targetT2 : nextT2;
+            } else {
+              return targetT2; // Стабілізація, температура більше не падає
+            }
           });
         }
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [isFanRunning, isWet, parsedT1, t2Input]);
+  }, [isFanRunning, isWet, parsedT1, t2Input, parsedP]);
 
   return (
     <main className={styles.app}>
@@ -91,8 +112,10 @@ export default function VologLab() {
             onReset={resetLab}
             t1Input={t1Input}
             t2Input={t2Input}
+            pInput={pInput} // Передаем давление
             onT1Change={setT1Input}
             onT2Change={setT2Input}
+            onPChange={setPInput}  // Передаем хэндлер изменения давления
           />
         </div>
 
@@ -102,6 +125,7 @@ export default function VologLab() {
           <VologCanvas
             t1={parsedT1}
             t2={parsedT2}
+            p={parsedP} // Передаем в канвас
             isDipping={isDipping}
             isFanRunning={isFanRunning}
           />

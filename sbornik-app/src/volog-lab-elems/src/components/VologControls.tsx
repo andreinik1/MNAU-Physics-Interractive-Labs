@@ -11,8 +11,10 @@ interface Props {
   onReset: () => void;
   t1Input: string;
   t2Input: string;
+  pInput: string; // Новое
   onT1Change: (val: string) => void;
   onT2Change: (val: string) => void;
+  onPChange: (val: string) => void; // Новое
 }
 
 const VologControls: React.FC<Props> = ({
@@ -25,8 +27,10 @@ const VologControls: React.FC<Props> = ({
   onReset,
   t1Input,
   t2Input,
+  pInput,
   onT1Change,
   onT2Change,
+  onPChange,
 }) => {
   const formatTime = (s: number) => {
     const m = Math.floor(s / 60);
@@ -34,7 +38,6 @@ const VologControls: React.FC<Props> = ({
     return `${m}:${sec < 10 ? "0" : ""}${sec}`;
   };
 
-  // Блокуємо інпути, якщо експеримент уже почався
   const isStarted = isWet || isDipping || isFanRunning || timer > 0;
 
   return (
@@ -46,10 +49,10 @@ const VologControls: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Поля для введення початкових температур */}
-      <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "25%", marginRight: "20px" }}>
-          <label style={{ fontSize: "14px", fontWeight: "500", color: "#475569" }}>
+      {/* Поля для введення початкових параметрів */}
+      <div style={{ display: "flex", gap: "15px", marginBottom: "20px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "30%" }}>
+          <label style={{ fontSize: "12px", fontWeight: "600", color: "#475569" }}>
             ТЕМП. СУХОГО (°C)
           </label>
           <input
@@ -61,8 +64,8 @@ const VologControls: React.FC<Props> = ({
             style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", width: "100%" }}
           />
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "25%" }}>
-          <label style={{ fontSize: "14px", fontWeight: "500", color: "#475569" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "30%" }}>
+          <label style={{ fontSize: "12px", fontWeight: "600", color: "#475569" }}>
             ТЕМП. ВОЛОГОГО (°C)
           </label>
           <input
@@ -71,6 +74,20 @@ const VologControls: React.FC<Props> = ({
             disabled={isStarted}
             onChange={(e) => onT2Change(e.target.value)}
             placeholder="Напр. 22.5"
+            style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", width: "100%" }}
+          />
+        </div>
+        {/* НОВЫЙ ИНПУТ: АТМОСФЕРНОЕ ДАВЛЕНИЕ */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "5px", width: "40%" }}>
+          <label style={{ fontSize: "12px", fontWeight: "600", color: "#475569" }}>
+            ТИСК АТМОСФЕРИ (гПа)
+          </label>
+          <input
+            type="text"
+            value={pInput}
+            disabled={isStarted}
+            onChange={(e) => onPChange(e.target.value)}
+            placeholder="Напр. 1013.25"
             style={{ padding: "8px", border: "1px solid #cbd5e1", borderRadius: "4px", width: "100%" }}
           />
         </div>

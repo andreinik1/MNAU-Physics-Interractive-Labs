@@ -4,6 +4,7 @@ export function drawPsychrometer(
   height: number,
   t1: number,
   t2: number,
+  p: number, // Принимаем давление
   isDipping: boolean,
   isFanRunning: boolean
 ) {
@@ -18,9 +19,24 @@ export function drawPsychrometer(
   ctx.lineWidth = 2;
   ctx.strokeRect(centerX - 120, 40, 240, 460);
 
-  // 2. Вентилятор (анімація лопатей)
+  ctx.fillStyle = "#334155";
+  ctx.fillRect(centerX - 110, 42, 220, 38);
+  ctx.strokeStyle = "#cbd5e1";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(centerX - 110, 42, 220, 38);
+
+  ctx.fillStyle = "#38bdf8"; // Светло-голубой "электронный" шрифт
+  ctx.font = "11px monospace";
+  ctx.textAlign = "left";
+  
+  // Перевели единицы измерения на украинский (гПа и мм рт. ст.)
+  ctx.fillText(`P: ${p.toFixed(2)} гПа`, centerX - 100, 56);
+  const pMmHg = p * 0.750062;
+  ctx.fillText(`P: ${pMmHg.toFixed(1)} мм рт. ст.`, centerX - 100, 70);
+
+  // 2. Вентилятор (анімація лопатей, сместили чуть ниже табло на Y=120)
   ctx.save();
-  ctx.translate(centerX, 80);
+  ctx.translate(centerX, 120);
   if (isFanRunning) ctx.rotate((Date.now() / 150) % (Math.PI * 2));
   ctx.fillStyle = "#334155";
   for (let i = 0; i < 3; i++) {
@@ -79,7 +95,6 @@ export function drawPsychrometer(
     ctx.fillStyle = "#0f172a";
     ctx.font = "bold 15px Inter, Arial";
     
-    // Якщо це лівий термометр (сухий) — зміщуємо вліво від шкали, якщо правий (вологий) — вправо
     if (!isWetTerm) {
       ctx.textAlign = "right";
       ctx.fillText(`${temp.toFixed(1)}°C`, x - 20, yPos - level + 5);
@@ -88,7 +103,6 @@ export function drawPsychrometer(
       ctx.fillText(`${temp.toFixed(1)}°C`, x + 20, yPos - level + 5);
     }
     
-    // Підпис знизу залишаємо по центру
     ctx.textAlign = "center";
     ctx.font = "12px Inter, Arial";
     ctx.fillText(label, x, yPos + 35);

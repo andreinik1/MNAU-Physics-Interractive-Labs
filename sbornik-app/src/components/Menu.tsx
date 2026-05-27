@@ -9,7 +9,8 @@ const Menu: React.FC = () => {
       <h2>Каталог лабораторних робіт</h2>
 
       <div className="module-section">
-        <p className="module-title">Модуль 1, 2 "Механіка"</p>
+        <p className="module-title">Модуль 1 "Механіка матеріальної точки"</p>
+        <p className="module-title">Модуль 2 "Механіка твердого тіла"</p>
         <div className="links-grid">
           <Link to="/pendulum" className="linkStyles">Математичний маятник</Link>
           <Link to="/young1" className="linkStyles">Модуль Юнга при згині балки</Link>
