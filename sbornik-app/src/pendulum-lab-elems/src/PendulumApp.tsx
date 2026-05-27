@@ -59,6 +59,7 @@ export default function PendulumApp() {
             onUpdate={handleUpdate}
           />
         </div>
+          
       </div>
     </main>
   );

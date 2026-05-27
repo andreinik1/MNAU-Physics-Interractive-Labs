@@ -142,14 +142,6 @@ const LabContainer: React.FC = () => {
       setErrors(["Не вдалося з'єднатися з сервером"]);
     }
   };
-  const downloadSample = () => {
-    const link = document.createElement("a");
-    link.href = "./lab2.doc";
-    link.download = "ЛБ 2 Приск. вільн. пад.doc";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   // Хелпер для получения класса валидации ячейки
   const getFieldClassName = (rowIndex: number, fieldName: string) => {
@@ -175,13 +167,6 @@ const LabContainer: React.FC = () => {
               onChange={handleCountChange}
             />
           </div>
-          <button
-            type="button"
-            onClick={downloadSample}
-            className={styles.downloadBtn}
-          >
-            Скачати зразок виконання
-          </button>
         </div>
 
         {errors.length > 0 && (
