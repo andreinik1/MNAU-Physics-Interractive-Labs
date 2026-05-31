@@ -1,16 +1,16 @@
 import { useEffect, useRef } from "react";
 import { drawAdiab } from "../canvas/drawAdiab";
 
-interface Props { 
-  displayH: number; 
-  h1: number; 
+interface Props {
+  displayH: number;
+  h1: number;
   h2: number;
-  isCompressorOn: boolean; 
-  isSiphonPressed: boolean; 
+  isCompressorOn: boolean;
+  isSiphonPressed: boolean;
   isTubeConnected: boolean;
 }
 
-export function AdiabCanvas({ h1, h2, isCompressorOn, isSiphonPressed, isTubeConnected }: Props) {
+export function AdiabCanvas({ displayH, h1, h2, isCompressorOn, isSiphonPressed, isTubeConnected }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -25,13 +25,14 @@ export function AdiabCanvas({ h1, h2, isCompressorOn, isSiphonPressed, isTubeCon
       canvas.width = wrapper.clientWidth;
       canvas.height = wrapper.clientHeight;
       drawAdiab(
-        ctx, 
-        canvas.width, 
-        canvas.height, 
-        h1, 
+        ctx,
+        canvas.width,
+        canvas.height,
+        displayH,
+        h1,
         h2,
-        isCompressorOn, 
-        isSiphonPressed, 
+        isCompressorOn,
+        isSiphonPressed,
         isTubeConnected
       );
     };
@@ -40,7 +41,7 @@ export function AdiabCanvas({ h1, h2, isCompressorOn, isSiphonPressed, isTubeCon
 
     window.addEventListener("resize", render);
     return () => window.removeEventListener("resize", render);
-  }, [h1, h2, isCompressorOn, isSiphonPressed, isTubeConnected]);
+  }, [displayH, h1, h2, isCompressorOn, isSiphonPressed, isTubeConnected]);
 
   return (
     <div ref={wrapperRef} style={{ width: "100%", height: "500px", background: "#fff", borderRadius: "12px", border: "1px solid #e2e8f0" }}>

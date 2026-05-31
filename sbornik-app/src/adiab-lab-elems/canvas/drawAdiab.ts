@@ -2,6 +2,7 @@ export function drawAdiab(
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
+  displayH: number,
   h1: number,
   h2: number,
   isCompressorOn: boolean,
@@ -44,27 +45,35 @@ export function drawAdiab(
   ctx.strokeStyle = "#64748b";
   ctx.beginPath();
   ctx.moveTo(centerX - 50, centerY - 60); 
-  ctx.lineTo(centerX + 75, centerY - 60); // Доводимо до нового положення лівої трубки
+  ctx.lineTo(centerX + 75, centerY - 60); 
   ctx.stroke();
 
   // 5. Клапан сифона
   ctx.fillStyle = isSiphonPressed ? "#ef4444" : "#475569";
   ctx.fillRect(centerX - 110, centerY - 100, 20, 10);
 
-  // --- НАЛАШТУВАННЯ ГЕОМЕТРІЇ МАНОМЕТРА (ЗБІЛЬШЕНО ШИРИНУ ТА РІВЕНЬ) ---
-  const manoX = centerX + 130; // Зсунуто манометр трохи вправо, щоб не тиснув на балон
+  // --- НАЛАШТУВАННЯ ГЕОМЕТРІЇ МАНОМЕТРА ---
+  const manoX = centerX + 130; 
   const manoY = centerY + 20;
-  const radius = 55;        // РАДІУС ЗБІЛЬШЕНО (U-подібна трубка стала ширшою)
-  const topY = manoY - 140;  // Верх трубок
-  const bottomY = manoY + 60; // Центр заокруглення знизу
+  const radius = 55;         
+  const topY = manoY - 140;  
+  const bottomY = manoY + 60; 
 
-  // Розрахунок зсуву рідини
-  const currentDisplayH = h1 > 0 ? h1 : h2;
-  const shift = (currentDisplayH / 300) * 80; 
+  // Визначаємо поточний рівень тиску для відображення
+  let currentDisplayH = displayH;
+  if (h1 > 0) currentDisplayH = h1;
+  if (h2 > 0) currentDisplayH = h2;
 
-  // Початкова точка спокою рідини (робимо рівень вищим — піднімаємо ближче до topY)
-  // Раніше рідина починалася від bottomY, тепер вона на 40 пікселів вище за замовчуванням
-  const baseWaterLevelY = bottomY - 40; 
+  // Масштабування зсуву (розподіляємо h навпіл між двома колінами)
+  const shift = currentDisplayH / 2; 
+
+  // НАЧАЛЬНЫЙ ВИЗУАЛЬНЫЙ УРОВЕНЬ ВОДЫ (Здесь будет отметка "75" на шкале)
+  // Поднимаем мениск повыше от дна манометра
+  const baseWaterLevelY = bottomY - 60; 
+
+  // Вычисляем, где относительно baseWaterLevelY должен находиться физический "0" шкалы
+  // Т.к. 1 деление = 1 пиксель, ноль будет на 75 пикселей ниже начального уровня воды
+  const zeroLevelY = baseWaterLevelY + 75;
 
   // 6. Задня частина трубок манометра (основа)
   ctx.lineWidth = 14;
@@ -83,35 +92,37 @@ export function drawAdiab(
   ctx.lineCap = "butt"; 
 
   ctx.beginPath();
-  // ЛІВЕ КОЛІНО: опускається нижче початкового рівня (baseWaterLevelY + shift)
+  // ЛІВЕ КОЛІНО: опускається вниз від стартових 75 мм під тиском
   ctx.moveTo(manoX - radius, baseWaterLevelY + shift); 
   ctx.lineTo(manoX - radius, bottomY);
-  // Заокруглення знизу повністю залите
+  // Заокруглення знизу (завжди заповнене водою)
   ctx.arc(manoX, bottomY, radius, Math.PI, 0, true);
-  // ПРАВЕ КОЛІНО: піднімається вище початкового рівня (baseWaterLevelY - shift)
+  // ПРАВЕ КОЛІНО: піднімається вгору вище стартових 75 мм
   ctx.lineTo(manoX + radius, baseWaterLevelY - shift);
   ctx.stroke();
 
-  // 8. Масштабна лінійка (Ширину адаптовано під новий радіус)
-  const scaleWidth = radius * 2 - 20; // Автоматично розширюється між трубками
+  // 8. Масштабна лінійка
+  const scaleWidth = radius * 2 - 20; 
   ctx.fillStyle = "#f8fafc";
   ctx.strokeStyle = "#cbd5e1";
   ctx.lineWidth = 1;
-  ctx.fillRect(manoX - scaleWidth / 2, topY, scaleWidth, bottomY - topY);
-  ctx.strokeRect(manoX - scaleWidth / 2, topY, scaleWidth, bottomY - topY);
+  // Продлеваем линеечку чуть ниже, чтобы спрятать виртуальный ноль под изгиб
+  ctx.fillRect(manoX - scaleWidth / 2, topY, scaleWidth, zeroLevelY - topY + 5);
+  ctx.strokeRect(manoX - scaleWidth / 2, topY, scaleWidth, zeroLevelY - topY + 5);
 
-  // Міліметрові поділки
+  // Міліметрові поділки (малюємо знизу вгору від линии виртуального нуля)
   ctx.strokeStyle = "#64748b";
   ctx.fillStyle = "#64748b";
-  ctx.font = "12px monospace";
+  ctx.font = "11px monospace";
   ctx.textAlign = "center";
 
-  for (let y = topY + 10; y <= bottomY; y += 10) {
-    ctx.beginPath();
-    const isMajor = (y - topY - 10) % 50 === 0;
+  // Рисуем деления с шагом 10 пикселей (10 мм) вверх от точки нуля
+  for (let y = zeroLevelY; y >= topY; y -= 10) {
+    const labelVal = zeroLevelY - y;
+    const isMajor = labelVal % 50 === 0;
     const tickLength = isMajor ? 8 : 4;
 
-    // Риски з лівого та правого боку лінійки біля самих трубок
+    ctx.beginPath();
     ctx.moveTo(manoX - scaleWidth / 2, y);
     ctx.lineTo(manoX - scaleWidth / 2 + tickLength, y);
     
@@ -119,10 +130,9 @@ export function drawAdiab(
     ctx.lineTo(manoX + scaleWidth / 2 - tickLength, y);
     ctx.stroke();
 
-    // Текст по центру лінійки
-    if (isMajor && y < bottomY) {
-      const labelVal = Math.abs(baseWaterLevelY - y); // Нуль шкали тепер збігається з новим рівнем води
-      ctx.fillText(labelVal.toString(), manoX, y + 3);
+    // Текст по центру лінійки (0, 50, 75(на уровне воды), 100, 150...)
+    if (isMajor && y > topY) {
+      ctx.fillText(labelVal.toString(), manoX, y + 4);
     }
   }
 
@@ -130,9 +140,11 @@ export function drawAdiab(
   ctx.fillStyle = "#1e293b";
   ctx.font = "bold 16px Inter, Arial";
   ctx.textAlign = "center";
+  
   let text = "";
   if (h1 > 0) text += `h1: ${h1} мм `;
-  if (h2 > 0) text += `h2: ${h2} мм`;
+  if (h2 > 0) text += ` | h2: ${h2} мм`;
+  if (!text && displayH > 0) text = `h: ${displayH} мм`;
   if (!text) text = "h: 0 мм";
   ctx.fillText(text, manoX, bottomY + 90);
 }

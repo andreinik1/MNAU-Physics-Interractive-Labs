@@ -8,7 +8,7 @@ interface Props {
 }
 
 const AdiabControls: React.FC<Props> = (p) => (
-  <section className={styles.inputCard} style={{marginBottom: "30px"}}>
+  <section className={styles.inputCard} style={{ marginBottom: "30px" }}>
     <h2>Керування</h2>
     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
       <button className={styles.downloadBtn} onClick={p.onCompressor} style={{ background: p.isCompressorOn ? "#ef4444" : "#2563eb", margin: 0 }}>

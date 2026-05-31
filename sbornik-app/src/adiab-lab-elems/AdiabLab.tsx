@@ -15,9 +15,10 @@ export default function AdiabLab() {
   const [isTubeConnected, setIsTubeConnected] = useState(true);
   const [isH1Fixed, setIsH1Fixed] = useState(false);
 
+  // Исправлено: Накачка идет при выключенном (не зажатом) сифоне!
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | undefined;
-    if (isCompressorOn && isSiphonPressed && isTubeConnected && !isH1Fixed) {
+    if (isCompressorOn && !isSiphonPressed && isTubeConnected && !isH1Fixed) {
       interval = setInterval(() => {
         setDisplayH(prev => (prev < 220 ? prev + 2 : prev));
       }, 30);
@@ -28,23 +29,24 @@ export default function AdiabLab() {
   const handleSiphonChange = (pressed: boolean) => {
     setIsSiphonPressed(pressed);
 
-    // Фіксація h1 при відпусканні кнопки
-    if (!pressed && isCompressorOn && isTubeConnected && displayH > 0 && !isH1Fixed) {
+    // Логика зажатия/отпускания сифона при накачке
+    if (pressed && isCompressorOn && isTubeConnected && displayH > 0 && !isH1Fixed) {
       setH1(displayH);
       setIsH1Fixed(true);
-      setDisplayH(0); // Скидаємо лічильник накачки, бо значення вже в h1
     }
 
-    // Скидання тиску (адіабата)
+    // Сброс давления во время "пшика"
     if (pressed && !isTubeConnected && isH1Fixed && h2 === 0) {
       setDisplayH(0);
-      setH1(0); // Візуально прибираємо h1 під час "пшику"
+      setH1(0);
     }
 
-    // Поява h2
+    // Появление h2 после стабилизации температуры (через 1 секунду после закрытия сифона)
     if (!pressed && !isTubeConnected && isH1Fixed && h2 === 0) {
       setTimeout(() => {
-        const calculatedH2 = Math.round((h1 || 180) * (0.28 + Math.random() * 0.05));
+        // Берем сохраненный уровень, либо базовый ориентир, если сбросился
+        const baseH1 = displayH > 0 ? displayH : 180;
+        const calculatedH2 = Math.round(baseH1 * (0.28 + Math.random() * 0.05));
         setH2(calculatedH2);
       }, 1000);
     }
@@ -75,6 +77,7 @@ export default function AdiabLab() {
           <LabTable />
         </div>
         <div className={styles.canvasContainer}>
+          {/* Исправлено: Добавлен проп displayH={displayH} */}
           <AdiabCanvas
             displayH={displayH}
             h1={h1}
