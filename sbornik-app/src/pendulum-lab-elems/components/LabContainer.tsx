@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { validatePendulum } from "../../utils/experimentValidator"; // Убедись, что путь правильный
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 interface Measure {
   L: string;
@@ -162,14 +162,14 @@ const LabContainer: React.FC = () => {
               <thead>
                 <tr>
                   <th>№</th>
-                  <th><InlineMath math="L, \, \text{м}" /></th>
-                  <th><InlineMath math="N" /></th>
-                  <th><InlineMath math="t, \, \text{с}" /></th>
-                  <th><InlineMath math="T, \, \text{с}" /></th>
-                  <th><InlineMath math="g, \, \text{м/с}^2" /></th>
-                  <th><InlineMath math="g_{\text{сер}}, \, \text{м/с}^2" /></th>
-                  <th><InlineMath math="\Delta g, \, \text{м/с}^2" /></th>
-                  <th><InlineMath math="\Delta g_{\text{сер}}, \, \text{м/с}^2" /></th>
+                  <th><LaTeXFormula math="L, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="N" /></th>
+                  <th><LaTeXFormula math="t, \, \text{с}" /></th>
+                  <th><LaTeXFormula math="T, \, \text{с}" /></th>
+                  <th><LaTeXFormula math="g, \, \text{м/с}^2" /></th>
+                  <th><LaTeXFormula math="g_{\text{сер}}, \, \text{м/с}^2" /></th>
+                  <th><LaTeXFormula math="\Delta g, \, \text{м/с}^2" /></th>
+                  <th><LaTeXFormula math="\Delta g_{\text{сер}}, \, \text{м/с}^2" /></th>
                 </tr>
               </thead>
               <tbody>

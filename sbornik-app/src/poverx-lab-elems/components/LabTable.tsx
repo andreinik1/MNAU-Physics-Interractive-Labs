@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { validatePoverx } from "../../utils/experimentValidator";
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 interface Measure {
   n: string; m0: string; m1: string; M: string; d: string;
@@ -80,15 +80,15 @@ const LabTable: React.FC = () => {
               <thead>
                 <tr>
                   <th>№</th>
-                  <th><InlineMath math="n, \, \text{шт}" /></th>
-                  <th><InlineMath math="M_0, \, \text{кг}" /></th>
-                  <th><InlineMath math="M_1, \, \text{кг}" /></th>
-                  <th><InlineMath math="M, \, \text{кг}" /></th>
-                  <th><InlineMath math="d, \, \text{м}" /></th>
-                  <th><InlineMath math="\sigma, \, \text{Н/м}" /></th>
-                  <th><InlineMath math="\sigma_{cp}" /></th>
-                  <th><InlineMath math="\Delta\sigma" /></th>
-                  <th><InlineMath math="\Delta\sigma_{cp}" /></th>
+                  <th><LaTeXFormula math="n, \, \text{шт}" /></th>
+                  <th><LaTeXFormula math="M_0, \, \text{кг}" /></th>
+                  <th><LaTeXFormula math="M_1, \, \text{кг}" /></th>
+                  <th><LaTeXFormula math="M, \, \text{кг}" /></th>
+                  <th><LaTeXFormula math="d, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="\sigma, \, \text{Н/м}" /></th>
+                  <th><LaTeXFormula math="\sigma_{\text{ср}}" /></th>
+                  <th><LaTeXFormula math="\Delta\sigma" /></th>
+                  <th><LaTeXFormula math="\Delta\sigma_{\text{ср}}" /></th>
                 </tr>
               </thead>
               <tbody>

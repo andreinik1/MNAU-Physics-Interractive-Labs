@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { validateStocks } from "../../utils/experimentValidator";
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 interface Measure {
   rho1: string; rho2: string; g: string;
@@ -81,16 +81,16 @@ const LabTable: React.FC = () => {
               <thead>
                 <tr>
                   <th>№</th>
-                  <th><InlineMath math="\rho_1" /></th>
-                  <th><InlineMath math="\rho_2" /></th>
-                  <th><InlineMath math="g" /></th>
-                  <th><InlineMath math="l, \text{м}" /></th>
-                  <th><InlineMath math="d, \text{м}" /></th>
-                  <th><InlineMath math="t, \text{с}" /></th>
-                  <th><InlineMath math="\eta" /></th>
-                  <th><InlineMath math="\eta_{cep}" /></th>
-                  <th><InlineMath math="\Delta\eta" /></th>
-                  <th><InlineMath math="\Delta\eta_{cep}" /></th>
+                  <th><LaTeXFormula math="\rho_1" /></th>
+                  <th><LaTeXFormula math="\rho_2" /></th>
+                  <th><LaTeXFormula math="g" /></th>
+                  <th><LaTeXFormula math="l, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="d, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="t, \, \text{с}" /></th>
+                  <th><LaTeXFormula math="\eta" /></th>
+                  <th><LaTeXFormula math="\eta_{\text{сер}}" /></th>
+                  <th><LaTeXFormula math="\Delta\eta" /></th>
+                  <th><LaTeXFormula math="\Delta\eta_{\text{сер}}" /></th>
                 </tr>
               </thead>
               <tbody>

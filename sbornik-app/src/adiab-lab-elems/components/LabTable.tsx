@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { validateAdiab } from "../../utils/experimentValidator";
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 interface Measure {
   h1: string; h2: string; gamma: string;
@@ -81,12 +81,12 @@ const LabTable: React.FC = () => {
             <thead>
               <tr>
                 <th>№</th>
-                <th><InlineMath math="h_1" /></th>
-                <th><InlineMath math="h_2" /></th>
-                <th><InlineMath math="\gamma" /></th>
-                <th><InlineMath math="\gamma_{сер}" /></th>
-                <th><InlineMath math="\Delta \gamma" /></th>
-                <th><InlineMath math="\Delta \gamma_{сер}" /></th>
+                <th><LaTeXFormula math="h_1" /></th>
+                <th><LaTeXFormula math="h_2" /></th>
+                <th><LaTeXFormula math="\gamma" /></th>
+                <th><LaTeXFormula math="\gamma_{\text{сер}}" /></th>
+                <th><LaTeXFormula math="\Delta \gamma" /></th>
+                <th><LaTeXFormula math="\Delta \gamma_{\text{сер}}" /></th>
               </tr>
             </thead>
             <tbody>

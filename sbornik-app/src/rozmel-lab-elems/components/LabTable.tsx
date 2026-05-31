@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import { validateLinearExpansion } from "../../utils/experimentValidator";
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 interface Measure {
   I: string; U: string; l1: string; l2: string; dl: string; R1: string; R2: string; dT: string; alpha: string;
@@ -75,15 +75,15 @@ const LabTable: React.FC = () => {
             <thead>
               <tr>
                 <th>№</th>
-                <th><InlineMath math="I, A" /></th>
-                <th><InlineMath math="U, B" /></th>
-                <th><InlineMath math="l_1, mm" /></th>
-                <th><InlineMath math="l_2, mm" /></th>
-                <th><InlineMath math="\Delta l, mm" /></th>
-                <th><InlineMath math="R_1, \Omega" /></th>
-                <th><InlineMath math="R_2, \Omega" /></th>
-                <th><InlineMath math="\Delta t, ^\circ C" /></th>
-                <th><InlineMath math="\alpha, grad^{-1}" /></th>
+                <th><LaTeXFormula math="I, \, \text{A}" /></th>
+                <th><LaTeXFormula math="U, \, \text{B}" /></th>
+                <th><LaTeXFormula math="l_1, \, \text{мм}" /></th>
+                <th><LaTeXFormula math="l_2, \, \text{мм}" /></th>
+                <th><LaTeXFormula math="\Delta l, \, \text{мм}" /></th>
+                <th><LaTeXFormula math="R_1, \, \Omega" /></th>
+                <th><LaTeXFormula math="R_2, \, \Omega" /></th>
+                <th><LaTeXFormula math="\Delta t, \, ^\circ\text{C}" /></th>
+                <th><LaTeXFormula math="\alpha, \, \text{град}^{-1}" /></th>
               </tr>
             </thead>
             <tbody>

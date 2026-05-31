@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { validateDensity } from "../../utils/experimentValidator";
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 interface Measure {
   P1: string;    // P1, H
@@ -130,12 +130,12 @@ const LabTable: React.FC = () => {
               <thead>
                 <tr>
                   <th>№</th>
-                  <th><InlineMath math="P_1, \, \text{Н}" /></th>
-                  <th><InlineMath math="P_2, \, \text{Н}" /></th>
-                  <th><InlineMath math="P_3, \, \text{Н}" /></th>
-                  <th><InlineMath math="V, \, \text{м}^3" /></th>
-                  <th><InlineMath math="\gamma, \, \text{Н/м}^3" /></th>
-                  <th><InlineMath math="\rho, \, \text{кг/м}^3" /></th>
+                  <th><LaTeXFormula math="P_1, \, \text{Н}" /></th>
+                  <th><LaTeXFormula math="P_2, \, \text{Н}" /></th>
+                  <th><LaTeXFormula math="P_3, \, \text{Н}" /></th>
+                  <th><LaTeXFormula math="V, \, \text{м}^3" /></th>
+                  <th><LaTeXFormula math="\gamma, \, \text{Н/м}^3" /></th>
+                  <th><LaTeXFormula math="\rho, \, \text{кг/м}^3" /></th>
                 </tr>
               </thead>
               <tbody>

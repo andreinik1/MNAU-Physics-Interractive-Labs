@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./LabContainer.module.scss";
-import { BlockMath, InlineMath } from "react-katex";
-import lab7Pdf from "../physics/lab7.pdf"
-import lab_s7Pdf from "../physics/lab_s7.pdf"
+import lab7Pdf from "../physics/lab7.pdf";
+import lab_s7Pdf from "../physics/lab_s7.pdf";
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 const PoverxMeta: React.FC = () => {
   return (
@@ -21,86 +21,40 @@ const PoverxMeta: React.FC = () => {
       </p>
       <h2 style={{ marginBottom: "6px" }}>ХІД РОБОТИ: </h2>
       <p style={{ margin: "0 0 0 28px" }}>
-        1. На технічних терезах з точністю до 1.0 мг зважити порожню колбочку для визначення маси <InlineMath math="M_0" />.<br />
+        1. На технічних терезах з точністю до 1.0 мг зважити порожню колбочку для визначення маси <LaTeXFormula math="M_0" />.<br />
 
         2. Підставити під капілярну трубку порожню колбочку і при відкритому крані наливають воду в воронку. Промити обладнання, слідкуючи за тим, щоб в трубці не утворювалися бульбашки повітря.<br />
 
-        3. Закрити кран скляної бюретки заповненої водою. Користуючись краном змінити швидкість витікання води, намагаючись, щоб за хвилину відривалось не більше 8 – 10 крапель. Коли режим витікання буде встановлено, підставити колбочку, вага якої <InlineMath math="M_0" />, і відрахувати кількість крапель задану викладачем.<br />
+        3. Закрити кран скляної бюретки заповненої водою. Користуючись краном змінити швидкість витікання води, намагаючись, щоб за хвилину відривалось не більше 8 – 10 крапель. Коли режим витікання буде встановлено, підставити колбочку, вага якої <LaTeXFormula math="M_0" />, і відрахувати кількість крапель задану викладачем.<br />
 
-        4. Визначити масу <InlineMath math="M" /> колбочки з краплями води.<br />
+        4. Визначити масу <LaTeXFormula math="M" /> колбочки з краплями води.<br />
 
-        5. Визначити з допомогою мікрометра діаметр капілярної трубки <InlineMath math="d" />.<br />
+        5. Визначити з допомогою мікрометра діаметр капілярної трубки <LaTeXFormula math="d" />.<br />
 
         6. Дослід повторити 3 рази.<br />
 
         7. Результати вимірювань занести в таблицю.<br />
 
         8. Поверхневий натяг обчислити за формулою:
-        <BlockMath math="\sigma = \frac{M g}{n \pi d}" />
+        <LaTeXFormula math="\sigma = \frac{M g}{n \pi d}" block={true} />
 
         9. Обчислити абсолютну та відносну похибки, кінцевий результат записують у вигляді:
-        <BlockMath math="\sigma = (\sigma_{\text{сер}} \pm \Delta \sigma_{\text{сер}}) \, \text{Н/м}" />
+        <LaTeXFormula math="\sigma = (\sigma_{\text{сер}} \pm \Delta \sigma_{\text{сер}}) \, \text{Н/м}" block={true} />
       </p>
-      <div style={{ display: 'flex', gap: '16px', fontFamily: 'system-ui, -apple-system, sans-serif', margin: '20px 0' }}>
 
-        {/* Кнопка: Методичні рекомендації */}
+      <div style={{ display: 'flex', gap: '16px', fontFamily: 'system-ui, -apple-system, sans-serif', margin: '20px 0' }}>
         <a href={lab7Pdf} download="Методичні_рекомендації.pdf" style={{ textDecoration: 'none' }}>
-          <button
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              backgroundColor: '#2563eb',
-              color: '#ffffff',
-              fontSize: '14px',
-              fontWeight: 500,
-              padding: '10px 20px',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-              transition: 'background-color 0.2s ease'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
-          >
+          <button style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: '#2563eb', color: '#ffffff', fontSize: '14px', fontWeight: 500, padding: '10px 20px', border: 'none', borderRadius: '6px', cursor: 'pointer', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', transition: 'background-color 0.2s ease' }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
             Методичні рекомендації
           </button>
         </a>
-
-        {/* Кнопка: Оформлення */}
         <a href={lab_s7Pdf} download="Оформлення лабораторної.pdf" style={{ textDecoration: 'none' }}>
-          <button
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              backgroundColor: '#ffffff',
-              color: '#1f2937',
-              fontSize: '14px',
-              fontWeight: 500,
-              padding: '10px 20px',
-              border: '1px solid #d1d5db',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#f9fafb';
-              e.currentTarget.style.borderColor = '#9ca3af';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#ffffff';
-              e.currentTarget.style.borderColor = '#d1d5db';
-            }}
-          >
+          <button style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', backgroundColor: '#ffffff', color: '#1f2937', fontSize: '14px', fontWeight: 500, padding: '10px 20px', border: '1px solid #d1d5db', borderRadius: '6px', cursor: 'pointer', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)', transition: 'all 0.2s ease' }}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
             Оформлення роботи
           </button>
         </a>
-
       </div>
     </div>
   );

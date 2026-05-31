@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { validateYunga1 } from "../../utils/experimentValidator";
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 interface Measure {
   F: string;          // F, H
@@ -124,18 +124,18 @@ const LabContainer: React.FC = () => {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>№ п.п.</th>
-                  <th><InlineMath math="F, \, \text{H}" /></th>
-                  <th><InlineMath math="f_{\text{нав}}, \, \text{м}" /></th>
-                  <th><InlineMath math="f_{\text{розв}}, \, \text{м}" /></th>
-                  <th><InlineMath math="f_{\text{сер}}, \, \text{м}" /></th>
-                  <th><InlineMath math="E, \, \text{Н/м}^2" /></th>
-                  <th><InlineMath math="E_{\text{сер}}, \, \text{Н/м}^2" /></th>
-                  <th><InlineMath math="\Delta E, \, \text{Н/м}^2" /></th>
-                  <th><InlineMath math="\Delta E_{\text{сер}}, \, \text{Н/м}^2" /></th>
-                  <th><InlineMath math="L, \, \text{м}" /></th>
-                  <th><InlineMath math="b, \, \text{м}" /></th>
-                  <th><InlineMath math="h, \, \text{м}" /></th>
+                  <th>№</th>
+                  <th><LaTeXFormula math="F, \, \text{H}" /></th>
+                  <th><LaTeXFormula math="f_{\text{нав}}, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="f_{\text{розв}}, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="f_{\text{сер}}, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="E, \, \text{Н/м}^2" /></th>
+                  <th><LaTeXFormula math="E_{\text{сер}}, \, \text{Н/м}^2" /></th>
+                  <th><LaTeXFormula math="\Delta E, \, \text{Н/м}^2" /></th>
+                  <th><LaTeXFormula math="\Delta E_{\text{сер}}, \, \text{Н/м}^2" /></th>
+                  <th><LaTeXFormula math="L, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="b, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="h, \, \text{м}" /></th>
                 </tr>
               </thead>
               <tbody>

@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "./LabContainer.module.scss";
-import { BlockMath, InlineMath } from "react-katex";
-import lab10Pdf from "../physics/lab10.pdf"
-import lab_s10Pdf from "../physics/lab_s10.pdf"
+import { LaTeXFormula } from "../../components/LaTeXFormula";
+import lab10Pdf from "../physics/lab10.pdf";
+import lab_s10Pdf from "../physics/lab_s10.pdf";
 
-const DensityMeta: React.FC = () => {
+const RozmelMeta: React.FC = () => {
   return (
     <div className={styles.inputCard} style={{ marginBottom: "30px" }}>
       <h2 style={{ marginBottom: "6px" }}>Мета лабораторної роботи:</h2>
@@ -22,24 +22,24 @@ const DensityMeta: React.FC = () => {
       </p>
       <h2 style={{ marginBottom: "6px" }}>Хід роботи: </h2>
       <p style={{ margin: "0 0 0 28px" }}>
-        1. Ввімкнути джерело струму. Зачекати 20 – 30 с. Поки дріт нагрівається до максимальної температури і настане стан теплової рівноваги. Виміряти силу струму, напругу і видовження проводу <InlineMath math="\Delta l" />.<br />
+        1. Ввімкнути джерело струму. Зачекати 20 – 30 с. Поки дріт нагрівається до максимальної температури і настане стан теплової рівноваги. Виміряти силу струму, напругу і видовження проводу <LaTeXFormula math="\Delta l" />.<br />
 
-        2. Виміряти температуру повітря <InlineMath math="t_1" /> в лабораторії.<br />
+        2. Виміряти температуру повітря <LaTeXFormula math="t_1" /> в лабораторії.<br />
 
-        3. По формулі (6) обчислити опір проводу <InlineMath math="R_1" /> при температурі <InlineMath math="t_1" />.<br />
+        3. По формулі (6) обчислити опір проводу <LaTeXFormula math="R_1" /> при температурі <LaTeXFormula math="t_1" />.<br />
 
-        4. Для значень <InlineMath math="I" /> та <InlineMath math="U" /> визначити опір проводу <InlineMath math="R_2" /> при температурі <InlineMath math="t_2" />, використовуючи закон Ома (7).<br />
+        4. Для значень <LaTeXFormula math="I" /> та <LaTeXFormula math="U" /> визначити опір проводу <LaTeXFormula math="R_2" /> при температурі <LaTeXFormula math="t_2" />, використовуючи закон Ома (7).<br />
 
-        5. Використовуючи співвідношення (5), обчислити різницю температур <InlineMath math="t_2 - t_1" />. Знайти температуру нагрітого дроту <InlineMath math="t_2" />.<br />
+        5. Використовуючи співвідношення (5), обчислити різницю температур <LaTeXFormula math="t_2 - t_1" />. Знайти температуру нагрітого дроту <LaTeXFormula math="t_2" />.<br />
 
-        6. За формулою визначити коефіцієнт лінійного розширення <InlineMath math="\alpha" /> для ніхромового дроту:
-        <BlockMath math="\alpha = \frac{\Delta l}{l_1 (t_2 - t_1)}" />
+        6. За формулою визначити коефіцієнт лінійного розширення <LaTeXFormula math="\alpha" /> для ніхромового дроту:
+        <LaTeXFormula math="\alpha = \frac{\Delta l}{l_1 (t_2 - t_1)}" block={true} />
 
-        7. Порівняти кінцевий результат <InlineMath math="\alpha" /> з табличним значенням.<br />
+        7. Порівняти кінцевий результат <LaTeXFormula math="\alpha" /> з табличним значенням.<br />
 
         8. Оформити звіт, обчислення занести у таблицю.
       </p>
-            <div style={{ display: 'flex', gap: '16px', fontFamily: 'system-ui, -apple-system, sans-serif', margin: '20px 0' }}>
+      <div style={{ display: 'flex', gap: '16px', fontFamily: 'system-ui, -apple-system, sans-serif', margin: '20px 0' }}>
 
         {/* Кнопка: Методичні рекомендації */}
         <a href={lab10Pdf} download="Методичні_рекомендації.pdf" style={{ textDecoration: 'none' }}>
@@ -104,4 +104,4 @@ const DensityMeta: React.FC = () => {
   );
 };
 
-export default DensityMeta;
+export default RozmelMeta;

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { validateOberbek } from "../../utils/experimentValidator";
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 interface Measure {
   g: string; m: string; "4m_1": string; h: string; t: string; d: string; r: string; // Прямі
@@ -84,20 +84,20 @@ const LabTable: React.FC = () => {
                 <th colSpan={7}>Результати непрямих вимірювань</th>
               </tr>
               <tr>
-                <th><InlineMath math="g" /></th>
-                <th><InlineMath math="m" /></th>
-                <th><InlineMath math="4m_1" /></th>
-                <th><InlineMath math="h" /></th>
-                <th><InlineMath math="t" /></th>
-                <th><InlineMath math="d" /></th>
-                <th><InlineMath math="r" /></th>
-                <th><InlineMath math="a" /></th>
-                <th><InlineMath math="\varepsilon" /></th>
-                <th><InlineMath math="I_0" /></th>
-                <th><InlineMath math="I" /></th>
-                <th><InlineMath math="I_{сер}" /></th>
-                <th><InlineMath math="\Delta I" /></th>
-                <th><InlineMath math="\Delta I_{сер}" /></th>
+                <th><LaTeXFormula math="g" /></th>
+                <th><LaTeXFormula math="m" /></th>
+                <th><LaTeXFormula math="4m_1" /></th>
+                <th><LaTeXFormula math="h" /></th>
+                <th><LaTeXFormula math="t" /></th>
+                <th><LaTeXFormula math="d" /></th>
+                <th><LaTeXFormula math="r" /></th>
+                <th><LaTeXFormula math="a" /></th>
+                <th><LaTeXFormula math="\varepsilon" /></th>
+                <th><LaTeXFormula math="I_0" /></th>
+                <th><LaTeXFormula math="I" /></th>
+                <th><LaTeXFormula math="I_{\text{сер}}" /></th>
+                <th><LaTeXFormula math="\Delta I" /></th>
+                <th><LaTeXFormula math="\Delta I_{\text{сер}}" /></th>
               </tr>
             </thead>
             <tbody>

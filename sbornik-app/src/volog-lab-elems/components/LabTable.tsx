@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { validateVolog } from "../../utils/experimentValidator";
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 interface Measure {
   t1: string; t2: string; t_diff: string; E_prime: string; H: string;
@@ -81,20 +81,20 @@ const LabTable: React.FC = () => {
               <thead>
                 <tr>
                   <th rowSpan={2}>№</th>
-                  <th><InlineMath math="t_1, ^\circ C" /></th>
-                  <th><InlineMath math="t_2, ^\circ C" /></th>
-                  <th><InlineMath math="t_1-t_2" /></th>
-                  <th><InlineMath math="E', Па" /></th>
-                  <th><InlineMath math="H, Па" /></th>
-                  <th><InlineMath math="E, Па" /></th>
-                  <th><InlineMath math="e, Па" /></th>
-                  <th><InlineMath math="e_{сер}, Па" /></th>
-                  <th><InlineMath math="\Delta e, Па" /></th>
-                  <th><InlineMath math="\Delta e_{сер}, Па" /></th>
-                  <th><InlineMath math="r, \%" /></th>
-                  <th><InlineMath math="r_{сер}, \%" /></th>
-                  <th><InlineMath math="\Delta r, \%" /></th>
-                  <th><InlineMath math="\Delta r_{сер}, \%" /></th>
+                  <th><LaTeXFormula math="t_1, \, ^\circ\text{C}" /></th>
+                  <th><LaTeXFormula math="t_2, \, ^\circ\text{C}" /></th>
+                  <th><LaTeXFormula math="t_1 - t_2" /></th>
+                  <th><LaTeXFormula math="E', \, \text{Па}" /></th>
+                  <th><LaTeXFormula math="H, \, \text{Па}" /></th>
+                  <th><LaTeXFormula math="E, \, \text{Па}" /></th>
+                  <th><LaTeXFormula math="e, \, \text{Па}" /></th>
+                  <th><LaTeXFormula math="e_{\text{сер}}, \, \text{Па}" /></th>
+                  <th><LaTeXFormula math="\Delta e, \, \text{Па}" /></th>
+                  <th><LaTeXFormula math="\Delta e_{\text{сер}}, \, \text{Па}" /></th>
+                  <th><LaTeXFormula math="r, \, \%" /></th>
+                  <th><LaTeXFormula math="r_{\text{сер}}, \, \%" /></th>
+                  <th><LaTeXFormula math="\Delta r, \, \%" /></th>
+                  <th><LaTeXFormula math="\Delta r_{\text{сер}}, \, \%" /></th>
                 </tr>
               </thead>
               <tbody>

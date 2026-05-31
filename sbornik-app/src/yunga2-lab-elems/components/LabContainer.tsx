@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
-import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { validateYunga2 } from "../../utils/experimentValidator"; // Убедись, что путь к файлу правильный
+import { LaTeXFormula } from "../../components/LaTeXFormula";
 
 
 interface Measure {
@@ -82,16 +82,16 @@ const LabContainer: React.FC = () => {
               <thead>
                 <tr>
                   <th>№</th>
-                  <th><InlineMath math="F, H" /></th>
-                  <th><InlineMath math="f_{н}, м" /></th>
-                  <th><InlineMath math="f_{р}, м" /></th>
-                  <th><InlineMath math="f_{с}, м" /></th>
-                  <th><InlineMath math="E" /></th>
-                  <th><InlineMath math="E_{с}" /></th>
-                  <th><InlineMath math="\Delta E" /></th>
-                  <th><InlineMath math="\Delta E_{с}" /></th>
-                  <th><InlineMath math="L, м" /></th>
-                  <th><InlineMath math="d, м" /></th>
+                  <th><LaTeXFormula math="F, \, \text{H}" /></th>
+                  <th><LaTeXFormula math="\Delta l_{\text{нав}}, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="\Delta l_{\text{розв}}, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="\Delta l_{\text{сер}}, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="E" /></th>
+                  <th><LaTeXFormula math="E_{\text{сер}}" /></th>
+                  <th><LaTeXFormula math="\Delta E" /></th>
+                  <th><LaTeXFormula math="\Delta E_{\text{сер}}" /></th>
+                  <th><LaTeXFormula math="L, \, \text{м}" /></th>
+                  <th><LaTeXFormula math="d, \, \text{м}" /></th>
                 </tr>
               </thead>
               <tbody>
