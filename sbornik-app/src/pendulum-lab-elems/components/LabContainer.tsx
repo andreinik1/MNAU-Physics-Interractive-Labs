@@ -134,7 +134,6 @@ const LabContainer: React.FC = () => {
         <h2>Лабораторна робота: Математичний Маятник</h2>
 
         <div className={styles.formInline}>
-
           <div className={styles.countContainer}>
             <label>Кількість замірів:</label>
             <input
@@ -162,15 +161,15 @@ const LabContainer: React.FC = () => {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th><InlineMath math="№" /> </th>
-                  <th><InlineMath math="L (m)" /> </th>
-                  <th><InlineMath math="N" /> </th>
-                  <th><InlineMath math="t (c)" /> </th>
-                  <th><InlineMath math="T (c)" /> </th>
-                  <th><InlineMath math="g \, [m/s^2]" /></th>
-                  <th><InlineMath math="g_{\text{сер}} \, [m/s^2]" /></th>
-                  <th><InlineMath math="\Delta g \, [m/s^2]" /></th>
-                  <th><InlineMath math="\Delta g_{\text{сер}} \, [m/s^2]" /></th>
+                  <th>№</th>
+                  <th><InlineMath math="L, \, \text{м}" /></th>
+                  <th><InlineMath math="N" /></th>
+                  <th><InlineMath math="t, \, \text{с}" /></th>
+                  <th><InlineMath math="T, \, \text{с}" /></th>
+                  <th><InlineMath math="g, \, \text{м/с}^2" /></th>
+                  <th><InlineMath math="g_{\text{сер}}, \, \text{м/с}^2" /></th>
+                  <th><InlineMath math="\Delta g, \, \text{м/с}^2" /></th>
+                  <th><InlineMath math="\Delta g_{\text{сер}}, \, \text{м/с}^2" /></th>
                 </tr>
               </thead>
               <tbody>

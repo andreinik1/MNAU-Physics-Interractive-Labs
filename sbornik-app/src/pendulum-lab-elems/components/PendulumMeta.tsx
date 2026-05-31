@@ -1,21 +1,24 @@
 import React from "react";
 import styles from "./LabContainer.module.scss";
 import { BlockMath, InlineMath } from "react-katex";
-import lab1Pdf from "../physics/lab1.pdf"
-import lab_s1Pdf from "../physics/lab_s1.pdf"
+import lab1Pdf from "../physics/lab1.pdf";
+import lab_s1Pdf from "../physics/lab_s1.pdf";
 
 const PendulumMeta: React.FC = () => {
   return (
     <div className={styles.inputCard} style={{ marginBottom: "30px" }}>
       <h2 style={{ marginBottom: "6px" }}>Мета лабораторної роботи: </h2>
-      <p style={{ margin: "0 0 16px 28px" }}>1.	Виміряти прискорення вільного падіння по періоду коливання
-        математичного маятника.<br />
-        2.	Визначити закони гармонічного коливального руху.
+      <p style={{ margin: "0 0 16px 28px" }}>
+        1. Виміряти прискорення вільного падіння по періоду коливання математичного маятника.<br />
+        2. Визначити закони гармонічного коливального руху.
       </p>
+
       <h2 style={{ marginBottom: "6px" }}>Прилади та обладнання: </h2>
-      <p style={{ margin: "0 0 16px 28px" }}>1.	Важка   кулька,   яка   підвішена   на   легкій   нитці,   що   не розтягується<br />
-        2.	Секундомір
+      <p style={{ margin: "0 0 16px 28px" }}>
+        1. Важка кулька, яка підвішена на легкій нитці, що не розтягується<br />
+        2. Секундомір
       </p>
+
       <h2 style={{ marginBottom: "6px" }}>Хід роботи: </h2>
       <p style={{ margin: "0 0 0 28px" }}>
         1. Штангенциркулем вимірюють діаметр <InlineMath math="D" /> кульки та довжину маятника. Довжина маятника знаходиться за формулою:
@@ -38,6 +41,7 @@ const PendulumMeta: React.FC = () => {
         5. Прискорення вільного падіння знаходиться із формули періоду математичного маятника:
         <BlockMath math="g = \frac{4\pi^2}{T^2} \cdot l" />
       </p>
+
       <div style={{ display: 'flex', gap: '16px', fontFamily: 'system-ui, -apple-system, sans-serif', margin: '20px 0' }}>
 
         {/* Кнопка: Методичні рекомендації */}
@@ -62,7 +66,7 @@ const PendulumMeta: React.FC = () => {
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-            Методичні рекомендації
+            Metодичні рекомендації
           </button>
         </a>
 
