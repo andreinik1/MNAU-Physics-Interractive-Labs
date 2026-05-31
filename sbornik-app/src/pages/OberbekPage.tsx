@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "./PageStyles.module.scss";
 import { RiLayoutGrid2Fill } from "react-icons/ri";
-import OberbekLab from "../oberbek-lab-elems/src/OberbekLab";
+import OberbekLab from "../oberbek-lab-elems/OberbekLab";
 
 const OberbekPage: React.FC = () => {
     return (

@@ -2,26 +2,27 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
-import { validatePoverx } from "../../../utils/experimentValidator";
+import { validateYunga2 } from "../../utils/experimentValidator"; // Убедись, что путь к файлу правильный
+
 
 interface Measure {
-  n: string; m0: string; m1: string; M: string; d: string;
-  sigma: string; sigma_avg: string; d_sigma: string; d_sigma_avg: string;
+  F: string; f_nav: string; f_rozv: string; f_avg: string;
+  E: string; E_avg: string; delta_E: string; delta_E_avg: string;
+  L: string; d: string;
 }
 
 interface DetailedResult { [key: string]: boolean | undefined; }
 
-const LabTable: React.FC = () => {
+const LabContainer: React.FC = () => {
   const [measurementsCount, setMeasurementsCount] = useState<string>("3");
-  const [errors, setErrors] = useState<string[]>([]);
+  const [measures, setMeasures] = useState<Measure[]>(
+    Array.from({ length: 3 }, () => ({
+      F: "", f_nav: "", f_rozv: "", f_avg: "",
+      E: "", E_avg: "", delta_E: "", delta_E_avg: "",
+      L: "", d: ""
+    }))
+  );
   const [validResults, setValidResults] = useState<DetailedResult[]>([]);
-
-  const createEmptyRow = (): Measure => ({
-    n: "50", m0: "", m1: "", M: "", d: "", sigma: "",
-    sigma_avg: "", d_sigma: "", d_sigma_avg: ""
-  });
-
-  const [measures, setMeasures] = useState<Measure[]>(Array.from({ length: 3 }, createEmptyRow));
 
   const handleChange = (rowIndex: number, field: keyof Measure, value: string) => {
     setMeasures(prev => prev.map((row, i) => i === rowIndex ? { ...row, [field]: value } : row));
@@ -37,7 +38,10 @@ const LabTable: React.FC = () => {
     setMeasures(prev => {
       if (prev.length === newCount) return prev;
       if (prev.length < newCount) {
-        const added = Array.from({ length: newCount - prev.length }, createEmptyRow);
+        const added = Array.from({ length: newCount - prev.length }, () => ({
+          F: "", f_nav: "", f_rozv: "", f_avg: "", E: "", E_avg: "",
+          delta_E: "", delta_E_avg: "", L: "", d: ""
+        }));
         return [...prev, ...added];
       }
       return prev.slice(0, newCount);
@@ -45,28 +49,26 @@ const LabTable: React.FC = () => {
     setValidResults([]);
   };
 
-  const getFieldClassName = (rowIndex: number, fieldName: string) => {
-    const rowResult = validResults[rowIndex];
-    if (!rowResult || rowResult[fieldName] === undefined) return "";
-    return rowResult[fieldName] ? styles.inputCorrect : styles.inputIncorrect;
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // 1. Вызываем JS-валидатор напрямую вместо fetch запроса
+    const results = validateYunga2(measures);
+
+    // 2. Записываем готовый результат проверок в стейт
+    setValidResults(results);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrors([]);
-
-    // Прямой расчёт физики и погрешностей по твоей структуре
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const results = validatePoverx(measures as any[]);
-    setValidResults(results);
+  const getFieldClass = (idx: number, field: string) => {
+    const res = validResults[idx];
+    if (!res || res[field] === undefined) return "";
+    return res[field] ? styles.inputCorrect : styles.inputIncorrect;
   };
 
   return (
     <div className={styles.wrapper} style={{ marginBottom: "30px" }}>
       <section className={styles.inputCard}>
-        <h2>Результати вимірювань</h2>
-        {errors.length > 0 && <div className={styles.errorBox}>{errors[0]}</div>}
-
+        <h2>Лабораторна робота: Визначення модуля Юнга</h2>
         <div className={styles.formInline}>
           <div className={styles.countContainer}>
             <label>Кількість замірів:</label>
@@ -80,15 +82,16 @@ const LabTable: React.FC = () => {
               <thead>
                 <tr>
                   <th>№</th>
-                  <th><InlineMath math="n, \, \text{шт}" /></th>
-                  <th><InlineMath math="M_0, \, \text{кг}" /></th>
-                  <th><InlineMath math="M_1, \, \text{кг}" /></th>
-                  <th><InlineMath math="M, \, \text{кг}" /></th>
-                  <th><InlineMath math="d, \, \text{м}" /></th>
-                  <th><InlineMath math="\sigma, \, \text{Н/м}" /></th>
-                  <th><InlineMath math="\sigma_{cp}" /></th>
-                  <th><InlineMath math="\Delta\sigma" /></th>
-                  <th><InlineMath math="\Delta\sigma_{cp}" /></th>
+                  <th><InlineMath math="F, H" /></th>
+                  <th><InlineMath math="f_{н}, м" /></th>
+                  <th><InlineMath math="f_{р}, м" /></th>
+                  <th><InlineMath math="f_{с}, м" /></th>
+                  <th><InlineMath math="E" /></th>
+                  <th><InlineMath math="E_{с}" /></th>
+                  <th><InlineMath math="\Delta E" /></th>
+                  <th><InlineMath math="\Delta E_{с}" /></th>
+                  <th><InlineMath math="L, м" /></th>
+                  <th><InlineMath math="d, м" /></th>
                 </tr>
               </thead>
               <tbody>
@@ -100,9 +103,9 @@ const LabTable: React.FC = () => {
                         <input
                           type="number"
                           step="0.000001"
-                          value={row[key] || ""}
-                          className={getFieldClassName(i, key)}
-                          onChange={(e) => handleChange(i, key, e.target.value)}
+                          value={row[key]}
+                          className={getFieldClass(i, key)}
+                          onChange={e => handleChange(i, key, e.target.value.replace(",", "."))}
                           required
                         />
                       </td>
@@ -112,7 +115,7 @@ const LabTable: React.FC = () => {
               </tbody>
             </table>
           </div>
-          <button type="submit" className={styles.downloadBtn} style={{ marginTop: "20px", background: "#3b82f6", color: "#fff" }}>
+          <button type="submit" className={styles.downloadBtn} style={{ marginTop: "20px", color: "white", backgroundColor: "#3b82f6" }}>
             Перевірити дані
           </button>
         </form>
@@ -121,4 +124,4 @@ const LabTable: React.FC = () => {
   );
 };
 
-export default LabTable;
+export default LabContainer;

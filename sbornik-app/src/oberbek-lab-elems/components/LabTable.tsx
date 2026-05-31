@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
-import { validateOberbek } from "../../../utils/experimentValidator";
+import { validateOberbek } from "../../utils/experimentValidator";
 
 interface Measure {
   g: string; m: string; "4m_1": string; h: string; t: string; d: string; r: string; // Прямі

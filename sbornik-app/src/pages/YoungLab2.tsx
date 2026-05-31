@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./PageStyles.module.scss";
-import Yunga1 from '../yunga2-lab-elems/src/Yunga1'
+import Yunga1 from '../yunga2-lab-elems/Yunga1'
 import { RiLayoutGrid2Fill} from "react-icons/ri";
 
 const YoungLab1: React.FC = () => {

@@ -2,32 +2,34 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
-import { validateDensity } from "../../../utils/experimentValidator";
+import { validateYunga1 } from "../../utils/experimentValidator";
 
 interface Measure {
-  P1: string;    // P1, H
-  P2: string;    // P2, H
-  P3: string;    // P3, H
-  V: string;     // V, м^3
-  gamma: string; // γ, Н/м^3
-  rho: string;   // ρ, кг/м^3
+  F: string;          // F, H
+  f_nav: string;      // f_нав, м
+  f_rozv: string;     // f_розв, м
+  f_avg: string;      // f_сер, м
+  E: string;          // E, H/м^2
+  E_avg: string;      // E_сер, H/м^2
+  delta_E: string;    // ΔE, H/м^2
+  delta_E_avg: string;// ΔE_сер, H/м^2
+  L: string;          // L, м
+  b: string;          // b, м
+  h: string;          // h, м
 }
 
 interface DetailedResult {
   [key: string]: boolean | undefined;
 }
 
-const LabTable: React.FC = () => {
+const LabContainer: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([]);
-  const [measurementsCount, setMeasurementsCount] = useState<string>("3");
+  const [measurementsCount, setMeasurementsCount] = useState<string>("3"); // В новой таблице 5 строк
 
   const createEmptyRow = (): Measure => ({
-    P1: "",
-    P2: "",
-    P3: "",
-    V: "",
-    gamma: "",
-    rho: "",
+    F: "", f_nav: "", f_rozv: "", f_avg: "",
+    E: "", E_avg: "", delta_E: "", delta_E_avg: "",
+    L: "", b: "", h: ""
   });
 
   const [measures, setMeasures] = useState<Measure[]>(
@@ -40,20 +42,14 @@ const LabTable: React.FC = () => {
     const errs: string[] = [];
     measures.forEach((m, i) => {
       const row = i + 1;
-      if (m.P1 && Number(m.P1) <= 0) errs.push(`Рядок ${row}: P1 має бути > 0`);
-      if (m.P2 && Number(m.P2) <= 0) errs.push(`Рядок ${row}: P2 має бути > 0`);
-      if (m.P3 && Number(m.P3) <= 0) errs.push(`Рядок ${row}: P3 має бути > 0`);
-      if (m.P1 && m.P2 && Number(m.P1) <= Number(m.P2)) {
-        errs.push(`Рядок ${row}: P1 має бути більшим за P2 (вага зменшується, коли поклали тіло)`);
-      }
-      if (m.P2 && m.P3 && Number(m.P3) <= Number(m.P2)) {
-        errs.push(`Рядок ${row}: P3 має бути більшим за P2 (додаємо важки у воді)`);
-      }
+      // Пример валидации для модуля Юнга
+      if (Number(m.F) < 0) errs.push(`Рядок ${row}: F не може бути від'ємним`);
+      if (Number(m.L) <= 0) errs.push(`Рядок ${row}: L має бути > 0`);
     });
     return errs;
   };
 
-  const handleChange = (rowIndex: number, field: keyof Measure, value: string) => {
+  const handleChange = (rowIndex: number, field: string, value: string) => {
     setMeasures((prev) =>
       prev.map((row, i) => (i === rowIndex ? { ...row, [field]: value } : row))
     );
@@ -83,6 +79,7 @@ const LabTable: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // 1. Локальная валидация полей ввода
     const validationErrors = validateMeasures();
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
@@ -90,7 +87,11 @@ const LabTable: React.FC = () => {
     }
 
     setErrors([]);
-    const results = validateDensity(measures);
+
+    // 2. Прямой вызов JS-валидатора вместо fetch запроса
+    const results = validateYunga1(measures);
+
+    // 3. Записываем готовый массив проверок в стейт без лишних манипуляций
     setValidResults(results);
   };
 
@@ -103,18 +104,12 @@ const LabTable: React.FC = () => {
   return (
     <div className={styles.wrapper} style={{ marginBottom: "30px" }}>
       <section className={styles.inputCard}>
-        <h2>Результати вимірювань та розрахунків</h2>
+        <h2>Лабораторна робота: Визначення модуля Юнга</h2>
 
         <div className={styles.formInline}>
           <div className={styles.countContainer}>
             <label>Кількість замірів:</label>
-            <input
-              type="number"
-              min="1"
-              max="15"
-              value={measurementsCount}
-              onChange={handleCountChange}
-            />
+            <input type="number" value={measurementsCount} onChange={handleCountChange} />
           </div>
         </div>
 
@@ -129,13 +124,18 @@ const LabTable: React.FC = () => {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>№</th>
-                  <th><InlineMath math="P_1, \, \text{Н}" /></th>
-                  <th><InlineMath math="P_2, \, \text{Н}" /></th>
-                  <th><InlineMath math="P_3, \, \text{Н}" /></th>
-                  <th><InlineMath math="V, \, \text{м}^3" /></th>
-                  <th><InlineMath math="\gamma, \, \text{Н/м}^3" /></th>
-                  <th><InlineMath math="\rho, \, \text{кг/м}^3" /></th>
+                  <th>№ п.п.</th>
+                  <th><InlineMath math="F, \, \text{H}" /></th>
+                  <th><InlineMath math="f_{\text{нав}}, \, \text{м}" /></th>
+                  <th><InlineMath math="f_{\text{розв}}, \, \text{м}" /></th>
+                  <th><InlineMath math="f_{\text{сер}}, \, \text{м}" /></th>
+                  <th><InlineMath math="E, \, \text{Н/м}^2" /></th>
+                  <th><InlineMath math="E_{\text{сер}}, \, \text{Н/м}^2" /></th>
+                  <th><InlineMath math="\Delta E, \, \text{Н/м}^2" /></th>
+                  <th><InlineMath math="\Delta E_{\text{сер}}, \, \text{Н/м}^2" /></th>
+                  <th><InlineMath math="L, \, \text{м}" /></th>
+                  <th><InlineMath math="b, \, \text{м}" /></th>
+                  <th><InlineMath math="h, \, \text{м}" /></th>
                 </tr>
               </thead>
               <tbody>
@@ -146,7 +146,7 @@ const LabTable: React.FC = () => {
                       <td key={key}>
                         <input
                           type="number"
-                          step="0.00000001"
+                          step="0.000001"
                           value={row[key]}
                           onChange={(e) => handleChange(i, key, e.target.value.replaceAll(",", "."))}
                           className={getFieldClassName(i, key)}
@@ -169,4 +169,4 @@ const LabTable: React.FC = () => {
   );
 };
 
-export default LabTable;
+export default LabContainer;

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import PendulumApp from '.././pendulum-lab-elems/src/PendulumApp'
+import PendulumApp from '.././pendulum-lab-elems/PendulumApp'
 import styles from "./PageStyles.module.scss";
 import { RiLayoutGrid2Fill } from "react-icons/ri";
 

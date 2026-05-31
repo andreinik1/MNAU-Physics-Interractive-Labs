@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./LabContainer.module.scss";
 import { InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
-import { validatePendulum } from "../../../utils/experimentValidator"; // Убедись, что путь правильный
+import { validatePendulum } from "../../utils/experimentValidator"; // Убедись, что путь правильный
 
 interface Measure {
   L: string;

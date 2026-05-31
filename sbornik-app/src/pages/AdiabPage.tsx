@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "./PageStyles.module.scss";
 import { RiLayoutGrid2Fill } from "react-icons/ri";
-import AdiabLab from "../adiab-lab-elems/src/AdiabLab";
+import AdiabLab from "../adiab-lab-elems/AdiabLab";
 
 const AdiabPage: React.FC = () => {
     return (

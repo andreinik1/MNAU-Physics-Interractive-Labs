@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "./PageStyles.module.scss";
 import { RiLayoutGrid2Fill } from "react-icons/ri";
-import StocksLab from "../stocks-lab-elems/src/StocksLab";
+import StocksLab from "../stocks-lab-elems/StocksLab";
 
 const StocksPage: React.FC = () => {
     return (

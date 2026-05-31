@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./PageStyles.module.scss";
-import PitomaVaga from '../pitomaVaga-lab-elems/src/DensityLab'
+import PitomaVaga from '../pitomaVaga-lab-elems/DensityLab'
 import { RiLayoutGrid2Fill } from "react-icons/ri";
 
 const PitomaVagaPage: React.FC = () => {

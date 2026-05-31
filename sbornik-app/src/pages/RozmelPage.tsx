@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "./PageStyles.module.scss";
 import { RiLayoutGrid2Fill } from "react-icons/ri";
-import RozmelLab from "../rozmel-lab-elems/src/RozmelLab";
+import RozmelLab from "../rozmel-lab-elems/RozmelLab";
 
 const RozmelPage: React.FC = () => {
     return (
