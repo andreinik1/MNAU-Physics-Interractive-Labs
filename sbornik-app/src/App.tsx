@@ -11,6 +11,7 @@ import VologPage from "./pages/VologPage";
 import AdiabPage from "./pages/AdiabPage";
 import OberbekPage from "./pages/OberbekPage";
 import RozmelPage from "./pages/RozmelPage";
+import 'katex/dist/katex.min.css';
 
 
 const App: React.FC = () => {
