@@ -41,7 +41,14 @@ const LabTable: React.FC = () => {
     measures.forEach((m, i) => {
       const row = i + 1;
       if (m.P1 && Number(m.P1) <= 0) errs.push(`Рядок ${row}: P1 має бути > 0`);
+      if (m.P2 && Number(m.P2) <= 0) errs.push(`Рядок ${row}: P2 має бути > 0`);
       if (m.P3 && Number(m.P3) <= 0) errs.push(`Рядок ${row}: P3 має бути > 0`);
+      if (m.P1 && m.P2 && Number(m.P1) <= Number(m.P2)) {
+        errs.push(`Рядок ${row}: P1 має бути більшим за P2 (вага зменшується, коли поклали тіло)`);
+      }
+      if (m.P2 && m.P3 && Number(m.P3) <= Number(m.P2)) {
+        errs.push(`Рядок ${row}: P3 має бути більшим за P2 (додаємо важки у воді)`);
+      }
     });
     return errs;
   };
@@ -50,7 +57,6 @@ const LabTable: React.FC = () => {
     setMeasures((prev) =>
       prev.map((row, i) => (i === rowIndex ? { ...row, [field]: value } : row))
     );
-    // Сбрасываем подсветку ошибки при изменении поля
     if (validResults[rowIndex]) {
       setValidResults((prev) =>
         prev.map((res, i) =>
@@ -77,7 +83,6 @@ const LabTable: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 1. Локальная валидация полей ввода
     const validationErrors = validateMeasures();
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
@@ -85,11 +90,7 @@ const LabTable: React.FC = () => {
     }
 
     setErrors([]);
-
-    // 2. Прямой вызов нашего валидатора (с уже исправленными внутри багами формул!)
     const results = validateDensity(measures);
-
-    // 3. Записываем результаты проверки в стейт
     setValidResults(results);
   };
 
