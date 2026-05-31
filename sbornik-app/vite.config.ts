@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/physicsLab2/",
+  base: "/MNAU-Physics-Interractive-Labs/",
   plugins: [react()],
   build: {
     sourcemap: true,
