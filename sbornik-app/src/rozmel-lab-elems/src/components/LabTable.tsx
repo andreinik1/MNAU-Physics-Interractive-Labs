@@ -12,10 +12,37 @@ interface ValidationResult {
 }
 
 const LabTable: React.FC = () => {
-  const [measurementsCount, setMeasurementsCount] = useState("3");
+  const [measurementsCount, setMeasurementsCount] = useState<string>("3");
   const [validResults, setValidResults] = useState<ValidationResult[]>([]);
-  const createRow = (): Measure => ({ I: "", U: "", l1: "350", l2: "", dl: "", R1: "4.77", R2: "", dT: "", alpha: "" });
+
+  const createRow = (): Measure => ({
+    I: "", U: "", l1: "350", l2: "", dl: "", R1: "4.77", R2: "", dT: "", alpha: ""
+  });
+
   const [measures, setMeasures] = useState<Measure[]>(Array.from({ length: 3 }, createRow));
+
+  const handleChange = (rowIndex: number, field: keyof Measure, value: string) => {
+    const cleanValue = value.replaceAll(",", ".");
+    setMeasures(prev => prev.map((row, i) => i === rowIndex ? { ...row, [field]: cleanValue } : row));
+    if (validResults[rowIndex]) {
+      setValidResults(prev => prev.map((res, i) => i === rowIndex ? { ...res, [field]: true } : res)); // Сбрасываем подсветку при редактировании
+    }
+  };
+
+  const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value, 10) || 0;
+    const newCount = Math.min(15, Math.max(0, val));
+    setMeasurementsCount(`${newCount}`);
+    setMeasures(prev => {
+      if (prev.length === newCount) return prev;
+      if (prev.length < newCount) {
+        const added = Array.from({ length: newCount - prev.length }, createRow);
+        return [...prev, ...added];
+      }
+      return prev.slice(0, newCount);
+    });
+    setValidResults([]);
+  };
 
   const handleCheck = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,59 +52,65 @@ const LabTable: React.FC = () => {
     setValidResults(results);
   };
 
+  const getFieldClassName = (rowIndex: number, fieldName: string) => {
+    const rowResult = validResults[rowIndex];
+    if (!rowResult || rowResult[fieldName] === undefined) return "";
+    return rowResult[fieldName] ? styles.inputCorrect : styles.inputIncorrect;
+  };
+
   return (
     <section className={styles.inputCard} style={{ marginTop: "30px", marginBottom: "30px" }}>
       <h2>Таблиця вимірювань</h2>
-      <input
-        type="number" value={measurementsCount}
-        onChange={(e) => {
-          setMeasurementsCount(e.target.value);
-          setMeasures(Array.from({ length: Number(e.target.value) || 1 }, createRow));
-        }}
-      />
 
-      <div style={{ overflowX: "auto", marginTop: "15px" }}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>№</th>
-              <th><InlineMath math="I, A" /></th>
-              <th><InlineMath math="U, B" /></th>
-              <th><InlineMath math="l_1, mm" /></th>
-              <th><InlineMath math="l_2, mm" /></th>
-              <th><InlineMath math="\Delta l, mm" /></th>
-              <th><InlineMath math="R_1, \Omega" /></th>
-              <th><InlineMath math="R_2, \Omega" /></th>
-              <th><InlineMath math="\Delta t, ^\circ C" /></th>
-              <th><InlineMath math="\alpha, grad^{-1}" /></th>
-            </tr>
-          </thead>
-          <tbody>
-            {measures.map((row, idx) => (
-              <tr key={idx}>
-                <td>{idx + 1}</td>
-                {Object.keys(row).map(key => (
-                  <td key={key}>
-                    <input
-                      type="number"
-                      value={row[key as keyof Measure]}
-                      className={validResults[idx]?.[key] === false ? styles.inputIncorrect : ""}
-                      onChange={(e) => {
-                        const newM = [...measures];
-                        newM[idx][key as keyof Measure] = e.target.value;
-                        setMeasures(newM);
-                      }}
-                    />
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className={styles.formInline}>
+        <div className={styles.countContainer}>
+          <label>Кількість замірів:</label>
+          <input type="number" value={measurementsCount} onChange={handleCountChange} />
+        </div>
       </div>
-      <button onClick={handleCheck} className={styles.downloadBtn} style={{ marginTop: "20px", color: "white", backgroundColor: "#3b82f6" }}>
-        Перевірити дані
-      </button>
+
+      <form onSubmit={handleCheck}>
+        <div style={{ overflowX: "auto", marginTop: "15px" }}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>№</th>
+                <th><InlineMath math="I, A" /></th>
+                <th><InlineMath math="U, B" /></th>
+                <th><InlineMath math="l_1, mm" /></th>
+                <th><InlineMath math="l_2, mm" /></th>
+                <th><InlineMath math="\Delta l, mm" /></th>
+                <th><InlineMath math="R_1, \Omega" /></th>
+                <th><InlineMath math="R_2, \Omega" /></th>
+                <th><InlineMath math="\Delta t, ^\circ C" /></th>
+                <th><InlineMath math="\alpha, grad^{-1}" /></th>
+              </tr>
+            </thead>
+            <tbody>
+              {measures.map((row, idx) => (
+                <tr key={idx}>
+                  <td>{idx + 1}</td>
+                  {(Object.keys(row) as Array<keyof Measure>).map(key => (
+                    <td key={key}>
+                      <input
+                        type="number"
+                        step="0.000001"
+                        value={row[key]}
+                        className={getFieldClassName(idx, key)}
+                        onChange={(e) => handleChange(idx, key, e.target.value)}
+                        required
+                      />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <button type="submit" className={styles.downloadBtn} style={{ marginTop: "20px", color: "white", backgroundColor: "#3b82f6" }}>
+          Перевірити дані
+        </button>
+      </form>
     </section>
   );
 };

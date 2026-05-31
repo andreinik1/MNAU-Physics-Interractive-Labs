@@ -13,6 +13,7 @@ interface Measure {
 interface DetailedResult { [key: string]: boolean | undefined; }
 
 const LabTable: React.FC = () => {
+  const [measurementsCount, setMeasurementsCount] = useState<string>("3");
   const [errors, setErrors] = useState<string[]>([]);
   const [validResults, setValidResults] = useState<DetailedResult[]>([]);
 
@@ -29,6 +30,21 @@ const LabTable: React.FC = () => {
     if (validResults[rowIndex]) {
       setValidResults(prev => prev.map((res, i) => i === rowIndex ? { ...res, [field]: undefined } : res));
     }
+  };
+
+  const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value, 10) || 0;
+    const newCount = Math.min(15, Math.max(0, val));
+    setMeasurementsCount(`${newCount}`);
+    setMeasures(prev => {
+      if (prev.length === newCount) return prev;
+      if (prev.length < newCount) {
+        const added = Array.from({ length: newCount - prev.length }, createEmptyRow);
+        return [...prev, ...added];
+      }
+      return prev.slice(0, newCount);
+    });
+    setValidResults([]);
   };
 
   const getFieldClassName = (rowIndex: number, fieldName: string) => {
@@ -51,6 +67,14 @@ const LabTable: React.FC = () => {
       <section className={styles.inputCard}>
         <h2>Результати вимірювань та розрахунків</h2>
         {errors.length > 0 && <div className={styles.errorBox}>{errors[0]}</div>}
+
+        <div className={styles.formInline}>
+          <div className={styles.countContainer}>
+            <label>Кількість замірів:</label>
+            <input type="number" value={measurementsCount} onChange={handleCountChange} />
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div style={{ overflowX: "auto" }}>
             <table className={styles.table}>

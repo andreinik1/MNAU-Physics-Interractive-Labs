@@ -69,9 +69,11 @@ const LabContainer: React.FC = () => {
     <div className={styles.wrapper} style={{ marginBottom: "30px" }}>
       <section className={styles.inputCard}>
         <h2>Лабораторна робота: Визначення модуля Юнга</h2>
-        <div className={styles.countContainer}>
-          <label>Кількість замірів:</label>
-          <input type="number" value={measurementsCount} onChange={handleCountChange} />
+        <div className={styles.formInline}>
+          <div className={styles.countContainer}>
+            <label>Кількість замірів:</label>
+            <input type="number" value={measurementsCount} onChange={handleCountChange} />
+          </div>
         </div>
 
         <form onSubmit={handleSubmit}>

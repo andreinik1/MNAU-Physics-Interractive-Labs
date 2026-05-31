@@ -109,13 +109,7 @@ const LabContainer: React.FC = () => {
         <div className={styles.formInline}>
           <div className={styles.countContainer}>
             <label>Кількість замірів:</label>
-            <input
-              type="number"
-              min="1"
-              max="15"
-              value={measurementsCount}
-              onChange={handleCountChange}
-            />
+            <input type="number" value={measurementsCount} onChange={handleCountChange} />
           </div>
         </div>
 

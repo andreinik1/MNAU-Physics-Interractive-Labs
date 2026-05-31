@@ -13,9 +13,15 @@ interface Measure {
 interface DetailedResult { [key: string]: boolean | undefined; }
 
 const LabTable: React.FC = () => {
+  const [measurementsCount, setMeasurementsCount] = useState<string>("3");
   const [validResults, setValidResults] = useState<DetailedResult[]>([]);
+
+  const createEmptyRow = (): Measure => ({
+    h1: "", h2: "", gamma: "", gamma_avg: "", delta_gamma: "", delta_gamme_avg: ""
+  });
+
   const [measures, setMeasures] = useState<Measure[]>(
-    Array.from({ length: 3 }, () => ({ h1: "", h2: "", gamma: "", gamma_avg: "", delta_gamma: "", delta_gamme_avg: "" }))
+    Array.from({ length: 3 }, createEmptyRow)
   );
 
   const handleChange = (rowIndex: number, field: keyof Measure, value: string) => {
@@ -24,6 +30,21 @@ const LabTable: React.FC = () => {
     if (validResults[rowIndex]) {
       setValidResults(prev => prev.map((res, i) => i === rowIndex ? { ...res, [field]: undefined } : res));
     }
+  };
+
+  const handleCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value, 10) || 0;
+    const newCount = Math.min(15, Math.max(0, val));
+    setMeasurementsCount(`${newCount}`);
+    setMeasures(prev => {
+      if (prev.length === newCount) return prev;
+      if (prev.length < newCount) {
+        const added = Array.from({ length: newCount - prev.length }, createEmptyRow);
+        return [...prev, ...added];
+      }
+      return prev.slice(0, newCount);
+    });
+    setValidResults([]);
   };
 
   const getFieldClassName = (rowIndex: number, fieldName: string) => {
@@ -46,6 +67,14 @@ const LabTable: React.FC = () => {
   return (
     <section className={styles.inputCard} style={{ marginBottom: "30px" }}>
       <h2>Результати вимірювань</h2>
+
+      <div className={styles.formInline}>
+        <div className={styles.countContainer}>
+          <label>Кількість замірів:</label>
+          <input type="number" value={measurementsCount} onChange={handleCountChange} />
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div style={{ overflowX: "auto" }}>
           <table className={styles.table}>

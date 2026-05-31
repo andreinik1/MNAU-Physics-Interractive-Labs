@@ -136,7 +136,7 @@ const LabContainer: React.FC = () => {
         <div className={styles.formInline}>
 
           <div className={styles.countContainer}>
-            <label>Кількість замірів (max 10):</label>
+            <label>Кількість замірів:</label>
             <input
               type="number"
               min="1"
